@@ -44,6 +44,11 @@ dependencies {
     //Android SDK Spotify Web API integration
     compile 'com.github.kaaes:spotify-web-api-android:0.4.1'
 
+    compile 'com.google.firebase:firebase-core:9.8.0'
+    compile 'com.google.firebase:firebase-database:9.8.0'
+
+
+
 
     compile 'com.android.support:appcompat-v7:24.2.1'
     testCompile 'junit:junit:4.12'

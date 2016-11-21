@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">PartyPlaylist</string>
+<string name="app_name">PartyPlaylist</string>
+
+<!-- Spotify Credentials -->
+<string name="client_id">ea09225ef2974242a1549f3812a15496</string>
+<string name="client_secret">49df12072ddf49e7b176bf15b2eef15a</string>
+<string name="title_activity_partify_main">PartifyMainActivity</string>
 </resources>
