@@ -26,7 +26,7 @@ public class LoginActivityController {
     private static final String TAG = LoginActivityController.class.getSimpleName();
 
     private static final String CLIENT_ID = "ea09225ef2974242a1549f3812a15496";
-    private static final String REDIRECT_URI = "hackathon2016-login://callback";
+    private static final String REDIRECT_URI = "ip-partyplaylist://callback";
     public static final int REQUEST_CODE = 1;
 
     private final SharedPreferenceHelper mSharedPreferenceHelper;

@@ -37,7 +37,7 @@ import kaaes.spotify.webapi.android.models.PlaylistSimple;
  * Created by HXJ on 11/19/2016.
  */
 
-public class PlaylistGUIActivity extends AppCompatActivity implements SpotifyPlayer.NotificationCallback, ConnectionStateCallback {
+public class PlaylistPlayerActivity extends AppCompatActivity implements SpotifyPlayer.NotificationCallback, ConnectionStateCallback {
 
     private Button mAddButton;
     private TextView songTitle;

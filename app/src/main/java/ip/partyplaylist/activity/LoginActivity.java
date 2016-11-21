@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ProgressBar;
 
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
@@ -23,8 +22,9 @@ public class LoginActivity extends AppCompatActivity implements
 
     private LoginActivityController mLoginActivityController;
 
-    private Button mLoginButton;
-    private ProgressBar mLoadingLoginProgressBar;
+    private Button mHostButton;
+    private Button mJoinButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,16 +38,26 @@ public class LoginActivity extends AppCompatActivity implements
 
         mLoginActivityController = new LoginActivityController(this);
 
-        mLoginButton = (Button) findViewById(R.id.login_button);
-        mLoadingLoginProgressBar = (ProgressBar) findViewById(R.id.loading_login);
+        mHostButton = (Button) findViewById(R.id.host_button);
+        mJoinButton = (Button) findViewById(R.id.join_button);
 
-        mLoginButton.setOnClickListener(new View.OnClickListener() {
+        mHostButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mLoginActivityController.onLoginUserToSpotify();
 
-                mLoadingLoginProgressBar.setVisibility(View.VISIBLE);
-                mLoginButton.setVisibility(View.GONE);
+                mHostButton.setVisibility(View.GONE);
+            }
+        });
+
+        mJoinButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //function when Join button is clicked
+                //Join activity controller needs to be implented
+
+                mJoinButton.setVisibility(View.GONE);
             }
         });
     }
@@ -56,8 +66,8 @@ public class LoginActivity extends AppCompatActivity implements
     protected void onResume() {
         super.onResume();
 
-        mLoadingLoginProgressBar.setVisibility(View.GONE);
-        mLoginButton.setVisibility(View.VISIBLE);
+        mHostButton.setVisibility(View.VISIBLE);
+        mJoinButton.setVisibility(View.VISIBLE);
 
         mLoginActivityController.onCheckIfUserIsLoggedIn();
     }
@@ -107,4 +117,12 @@ public class LoginActivity extends AppCompatActivity implements
         startActivity(loadMainPartifyScreen);
         finish();
     }
+
+    // shows join party screen
+//    @Override
+//    public void showJoinScreen() {
+//        Intent loadMainPartifyScreen = new Intent(this, PartifyMainActivity.class);
+//        startActivity(loadMainPartifyScreen);
+//        finish();
+//    }
 }

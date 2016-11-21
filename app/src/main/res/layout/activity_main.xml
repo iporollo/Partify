@@ -10,44 +10,53 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".activity.LoginActivity">
 
+    <Button
+        android:id="@+id/host_button"
+        android:layout_width="131dp"
+        android:layout_height="95dp"
+        android:text="Host"
+        android:visibility="visible"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="131dp"
+        android:layout_height="95dp"
+        android:text="Join"
+        android:visibility="visible"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/join_button" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="40dp"
         android:orientation="vertical"
-        android:layout_below="@+id/imageView2">
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="120dp"
             android:gravity="center"
-            android:text="Embrace"
+            android:text="PartyPlay"
             android:textSize="35sp"
             android:id="@+id/textView" />
 
-        <Button
-            android:id="@+id/login_button"
+        <ImageView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="6"
-            android:text="Login"
-            android:visibility="gone"/>
+            android:layout_height="180dp"
+            app:srcCompat="@mipmap/embrace_logo"
+            android:layout_gravity="center_vertical"
+            android:id="@+id/imageView2"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:background="@android:color/transparent" />
 
-        <ProgressBar
-            android:id="@+id/loading_login"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="6"
-            android:visibility="visible"/>
+
     </LinearLayout>
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="180dp"
-        app:srcCompat="@mipmap/embrace_logo"
-        android:layout_gravity="center_vertical"
-        android:id="@+id/imageView2"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:background="@android:color/transparent" />
 </RelativeLayout>

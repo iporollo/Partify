@@ -38,7 +38,7 @@ public class CreatePartyActivity extends AppCompatActivity implements
 
         mTracksAdapter = new PartifyTracksAdapter(mCurrentTrackList, this);
 
-        mPartyNameEditText = (EditText) findViewById(R.id.party_name_edit_text);
+        mPartyNameEditText = (EditText)  findViewById(R.id.party_name_edit_text);
         mPartyTrackList = (ListView) findViewById(R.id.party_track_list);
 
         Button mCreatePartyButton = (Button) findViewById(R.id.create_party);
@@ -80,9 +80,7 @@ public class CreatePartyActivity extends AppCompatActivity implements
     @Override
     public void showPartyCreatedScreen() {
         Toast.makeText(this, "Party Created!", Toast.LENGTH_SHORT).show();
-        //super.onBackPressed();
-        // todo redirect to new gui
-        Intent i = new Intent(CreatePartyActivity.this, PlaylistGUIActivity.class);
+        Intent i = new Intent(CreatePartyActivity.this, PlaylistPlayerActivity.class);
         startActivity(i);
     }
 
