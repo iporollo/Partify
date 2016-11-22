@@ -1,5 +1,6 @@
 package ip.partyplaylist.activity;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -14,10 +15,12 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.spotify.sdk.android.player.Config;
 import com.spotify.sdk.android.player.ConnectionStateCallback;
 import com.spotify.sdk.android.player.Error;
 import com.spotify.sdk.android.player.Player;
 import com.spotify.sdk.android.player.PlayerEvent;
+import com.spotify.sdk.android.player.Spotify;
 import com.spotify.sdk.android.player.SpotifyPlayer;
 
 import java.io.IOException;
@@ -42,8 +45,11 @@ public class PlaylistPlayerActivity extends AppCompatActivity implements Spotify
     private TextView songArtist;
     private ImageView albumCover;
 
+    private static final String CLIENT_ID = "ea09225ef2974242a1549f3812a15496";
+
 
     private CreatePartyController mCreatePartyController;
+    private LoginActivityController mLoginActivityController;
     private SharedPreferenceHelper mSharedPreferenceHelper;
     private SpotifyService mSpotifyService;
     private Pager<PlaylistSimple> userPlaylists;
@@ -69,10 +75,6 @@ public class PlaylistPlayerActivity extends AppCompatActivity implements Spotify
         songTitle.setVisibility(View.GONE);
         songArtist.setVisibility(View.GONE);
 
-//        mPlayer = spotifyPlayer;
-//        mPlayer.addConnectionStateCallback(MainActivity.this);
-//        mPlayer.addNotificationCallback(MainActivity.this);
-
 
         //todo needs to show add song screen
         mAddButton.setOnClickListener(new View.OnClickListener() {
@@ -82,11 +84,30 @@ public class PlaylistPlayerActivity extends AppCompatActivity implements Spotify
             }
         });
 
+
         mSharedPreferenceHelper = new SharedPreferenceHelper(this);
 
         final SpotifyApi mSpotifyApi = new SpotifyApi();
         mSpotifyApi.setAccessToken(mSharedPreferenceHelper.getCurrentSpotifyToken());
         mSpotifyService = mSpotifyApi.getService();
+
+        //creates spotify music player
+        Config playerConfig = new Config(PlaylistPlayerActivity.this, mSharedPreferenceHelper.getCurrentSpotifyToken(), CLIENT_ID);
+        Spotify.getPlayer(playerConfig, this, new SpotifyPlayer.InitializationObserver(){
+            @Override
+            public void onInitialized(SpotifyPlayer spotifyPlayer) {
+                mPlayer = spotifyPlayer;
+                mPlayer.addConnectionStateCallback(PlaylistPlayerActivity.this);
+                mPlayer.addNotificationCallback(PlaylistPlayerActivity.this);
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                Log.e("MainActivity", "Could not initialize player: " + throwable.getMessage());
+            }
+        });
+
+
 
         // retrives playlist to be displayed
         final Playlist p = populateList();
@@ -136,10 +157,20 @@ public class PlaylistPlayerActivity extends AppCompatActivity implements Spotify
                     e.printStackTrace();
                 }
 
+                mPlayer.playUri(null, p.tracks.items.get(position).track.uri, 0, 0);
+
             }
         });
 
     }
+
+    @Override
+    protected void onDestroy() {
+        // VERY IMPORTANT! This must always be called or else you will leak resources
+        Spotify.destroyPlayer(this);
+        super.onDestroy();
+    }
+
 
     @Override
     public void onLoggedIn() {

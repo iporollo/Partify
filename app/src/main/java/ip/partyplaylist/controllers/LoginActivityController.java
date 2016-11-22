@@ -7,14 +7,7 @@ import android.util.Log;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
-import com.spotify.sdk.android.player.Config;
-import com.spotify.sdk.android.player.ConnectionStateCallback;
-import com.spotify.sdk.android.player.Player;
-import com.spotify.sdk.android.player.Spotify;
-import com.spotify.sdk.android.player.SpotifyPlayer;
 
-import ip.partyplaylist.activity.LoginActivity;
-import ip.partyplaylist.activity.PlaylistPlayerActivity;
 import ip.partyplaylist.screen_actions.LoginScreenActions;
 import ip.partyplaylist.util.SharedPreferenceHelper;
 import ip.partyplaylist.util.SpotifyScope;
@@ -36,7 +29,6 @@ public class LoginActivityController {
 
     private final SharedPreferenceHelper mSharedPreferenceHelper;
     private Context mContext;
-    public Player mPlayer;
 
 
     public LoginActivityController(Context context) {
@@ -79,23 +71,6 @@ public class LoginActivityController {
             }
         });
 
-        //creates spotify music player
-        Config playerConfig = new Config((Activity) mContext, accessToken, CLIENT_ID);
-        Spotify.getPlayer(playerConfig, this, new SpotifyPlayer.InitializationObserver(){
-            @Override
-            public void onInitialized(SpotifyPlayer spotifyPlayer) {
-                mPlayer = spotifyPlayer;
-                mPlayer.addConnectionStateCallback((ConnectionStateCallback) mContext);
-                mPlayer.addNotificationCallback((Player.NotificationCallback) mContext);
-            }
-
-            @Override
-            public void onError(Throwable throwable) {
-                Log.e("MainActivity", "Could not initialize player: " + throwable.getMessage());
-            }
-        });
-
-
         ((LoginScreenActions) mContext).showMainScreen();
     }
 
@@ -105,7 +80,4 @@ public class LoginActivityController {
         }
     }
 
-    public Player getPlayer(){
-        return this.mPlayer;
-    }
 }
