@@ -1,5 +1,6 @@
 package ip.partyplaylist.activity;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -14,10 +15,12 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.spotify.sdk.android.player.Config;
 import com.spotify.sdk.android.player.ConnectionStateCallback;
 import com.spotify.sdk.android.player.Error;
 import com.spotify.sdk.android.player.Player;
 import com.spotify.sdk.android.player.PlayerEvent;
+import com.spotify.sdk.android.player.Spotify;
 import com.spotify.sdk.android.player.SpotifyPlayer;
 
 import java.io.IOException;
@@ -26,6 +29,7 @@ import java.util.ArrayList;
 
 import ip.partyplaylist.R;
 import ip.partyplaylist.controllers.CreatePartyController;
+import ip.partyplaylist.controllers.LoginActivityController;
 import ip.partyplaylist.util.SharedPreferenceHelper;
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
@@ -33,9 +37,6 @@ import kaaes.spotify.webapi.android.models.Pager;
 import kaaes.spotify.webapi.android.models.Playlist;
 import kaaes.spotify.webapi.android.models.PlaylistSimple;
 
-/**
- * Created by HXJ on 11/19/2016.
- */
 
 public class PlaylistPlayerActivity extends AppCompatActivity implements SpotifyPlayer.NotificationCallback, ConnectionStateCallback {
 
@@ -44,13 +45,16 @@ public class PlaylistPlayerActivity extends AppCompatActivity implements Spotify
     private TextView songArtist;
     private ImageView albumCover;
 
+    private static final String CLIENT_ID = "ea09225ef2974242a1549f3812a15496";
+
 
     private CreatePartyController mCreatePartyController;
+    private LoginActivityController mLoginActivityController;
     private SharedPreferenceHelper mSharedPreferenceHelper;
     private SpotifyService mSpotifyService;
     private Pager<PlaylistSimple> userPlaylists;
 
-    private ProgressBar mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+    //private ProgressBar mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
     private long songDuration = 1;
 
     private Player mPlayer;
@@ -68,10 +72,11 @@ public class PlaylistPlayerActivity extends AppCompatActivity implements Spotify
         songArtist = (TextView) findViewById(R.id.txtSongArtist);
         albumCover = (ImageView) findViewById(R.id.imgSongCover);
 
-//        mPlayer = spotifyPlayer;
-//        mPlayer.addConnectionStateCallback(MainActivity.this);
-//        mPlayer.addNotificationCallback(MainActivity.this);
+        songTitle.setVisibility(View.GONE);
+        songArtist.setVisibility(View.GONE);
 
+
+        //todo needs to show add song screen
         mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,11 +84,30 @@ public class PlaylistPlayerActivity extends AppCompatActivity implements Spotify
             }
         });
 
+
         mSharedPreferenceHelper = new SharedPreferenceHelper(this);
 
         final SpotifyApi mSpotifyApi = new SpotifyApi();
         mSpotifyApi.setAccessToken(mSharedPreferenceHelper.getCurrentSpotifyToken());
         mSpotifyService = mSpotifyApi.getService();
+
+        //creates spotify music player
+        Config playerConfig = new Config(PlaylistPlayerActivity.this, mSharedPreferenceHelper.getCurrentSpotifyToken(), CLIENT_ID);
+        Spotify.getPlayer(playerConfig, this, new SpotifyPlayer.InitializationObserver(){
+            @Override
+            public void onInitialized(SpotifyPlayer spotifyPlayer) {
+                mPlayer = spotifyPlayer;
+                mPlayer.addConnectionStateCallback(PlaylistPlayerActivity.this);
+                mPlayer.addNotificationCallback(PlaylistPlayerActivity.this);
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                Log.e("MainActivity", "Could not initialize player: " + throwable.getMessage());
+            }
+        });
+
+
 
         // retrives playlist to be displayed
         final Playlist p = populateList();
@@ -108,11 +132,17 @@ public class PlaylistPlayerActivity extends AppCompatActivity implements Spotify
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position,
                                     long id) {
+
+                //todo needs to be in controller
+
+                songTitle.setVisibility(View.VISIBLE);
+                songArtist.setVisibility(View.VISIBLE);
+
                 String selectedFromList =(String) (lstviewTracksGUI.getItemAtPosition(position));
                 songArtist.setText(selectedFromList.substring(0, p.tracks.items.get(position).track.artists.get(0).name.length()));
                 songTitle.setText(selectedFromList.substring(p.tracks.items.get(position).track.artists.get(0).name.length()+3, selectedFromList.length()));
 
-                initializeProgressBar();
+                //initializeProgressBar();
                 songDuration = p.tracks.items.get(position).track.duration_ms;
 
                 //miliseconds timer, call setProgressBar()
@@ -127,10 +157,20 @@ public class PlaylistPlayerActivity extends AppCompatActivity implements Spotify
                     e.printStackTrace();
                 }
 
+                mPlayer.playUri(null, p.tracks.items.get(position).track.uri, 0, 0);
+
             }
         });
 
     }
+
+    @Override
+    protected void onDestroy() {
+        // VERY IMPORTANT! This must always be called or else you will leak resources
+        Spotify.destroyPlayer(this);
+        super.onDestroy();
+    }
+
 
     @Override
     public void onLoggedIn() {
@@ -168,12 +208,6 @@ public class PlaylistPlayerActivity extends AppCompatActivity implements Spotify
     }
 
 
-
-
-
-
-
-
     private Playlist populateList() {
         // retrives all user playlists
         userPlaylists = mSpotifyService.getMyPlaylists();
@@ -184,12 +218,12 @@ public class PlaylistPlayerActivity extends AppCompatActivity implements Spotify
         return p;
     }
 
-    private void initializeProgressBar() {
-        mProgressBar.setMax(100);
-        mProgressBar.setProgress(0);
-    }
-
-    private void setProgressBar(int val) { //miliseconds
-        mProgressBar.setProgress((val / (int) songDuration));
-    }
+//    private void initializeProgressBar() {
+//        mProgressBar.setMax(100);
+//        mProgressBar.setProgress(0);
+//    }
+//
+//    private void setProgressBar(int val) { //miliseconds
+//        mProgressBar.setProgress((val / (int) songDuration));
+//    }
 }

@@ -18,9 +18,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-/**
- * Created by az on 22/05/16.
- */
+
 public class LoginActivityController {
 
     private static final String TAG = LoginActivityController.class.getSimpleName();
@@ -31,6 +29,7 @@ public class LoginActivityController {
 
     private final SharedPreferenceHelper mSharedPreferenceHelper;
     private Context mContext;
+
 
     public LoginActivityController(Context context) {
         mContext = context;
@@ -44,7 +43,8 @@ public class LoginActivityController {
 
         builder.setScopes(new String[]{
                 SpotifyScope.PLAYLIST_MODIFY_PRIVATE,
-                SpotifyScope.PLAYLIST_MODIFY_PUBLIC});
+                SpotifyScope.PLAYLIST_MODIFY_PUBLIC,
+                SpotifyScope.STREAMING});
 
         AuthenticationRequest request = builder.build();
         AuthenticationClient.openLoginActivity((Activity) mContext, REQUEST_CODE, request);
@@ -79,4 +79,5 @@ public class LoginActivityController {
             ((LoginScreenActions) mContext).showMainScreen();
         }
     }
+
 }

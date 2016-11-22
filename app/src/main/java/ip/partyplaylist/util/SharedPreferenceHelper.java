@@ -3,9 +3,7 @@ package ip.partyplaylist.util;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-/**
- * Created by az on 21/05/16.
- */
+
 public class SharedPreferenceHelper {
 
     public static final String PREFERENCES = "PartifyPreferences";
