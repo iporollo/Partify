@@ -10,6 +10,7 @@ import android.widget.Button;
 
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
+import com.spotify.sdk.android.player.Config;
 import com.spotify.sdk.android.player.ConnectionStateCallback;
 
 import ip.partyplaylist.R;
@@ -82,6 +83,10 @@ public class LoginActivity extends AppCompatActivity implements
 
                 String accessToken = response.getAccessToken();
                 mLoginActivityController.onUserLoggedInSuccessfully(accessToken);
+
+                //idk if this goes in the controller or here - implementing player
+               // Config playerConfig = new Config(this, accessToken, mLoginActivityController.CLIENT_ID);
+
             }
         }
     }
@@ -117,6 +122,8 @@ public class LoginActivity extends AppCompatActivity implements
         startActivity(loadMainPartifyScreen);
         finish();
     }
+
+
 
     // shows join party screen
 //    @Override

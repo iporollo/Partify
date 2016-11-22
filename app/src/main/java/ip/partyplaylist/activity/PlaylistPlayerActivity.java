@@ -26,6 +26,7 @@ import java.util.ArrayList;
 
 import ip.partyplaylist.R;
 import ip.partyplaylist.controllers.CreatePartyController;
+import ip.partyplaylist.controllers.LoginActivityController;
 import ip.partyplaylist.util.SharedPreferenceHelper;
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
@@ -33,9 +34,6 @@ import kaaes.spotify.webapi.android.models.Pager;
 import kaaes.spotify.webapi.android.models.Playlist;
 import kaaes.spotify.webapi.android.models.PlaylistSimple;
 
-/**
- * Created by HXJ on 11/19/2016.
- */
 
 public class PlaylistPlayerActivity extends AppCompatActivity implements SpotifyPlayer.NotificationCallback, ConnectionStateCallback {
 
@@ -68,14 +66,19 @@ public class PlaylistPlayerActivity extends AppCompatActivity implements Spotify
         songArtist = (TextView) findViewById(R.id.txtSongArtist);
         albumCover = (ImageView) findViewById(R.id.imgSongCover);
 
+        songTitle.setVisibility(View.GONE);
+        songArtist.setVisibility(View.GONE);
+
 //        mPlayer = spotifyPlayer;
 //        mPlayer.addConnectionStateCallback(MainActivity.this);
 //        mPlayer.addNotificationCallback(MainActivity.this);
 
+
+        //todo needs to show add song screen
         mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCreatePartyController.onAddTrackButtonPressed();
+//                mCreatePartyController.onAddTrackButtonPressed();
             }
         });
 
@@ -108,6 +111,12 @@ public class PlaylistPlayerActivity extends AppCompatActivity implements Spotify
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position,
                                     long id) {
+
+                //todo needs to be in controller
+
+                songTitle.setVisibility(View.VISIBLE);
+                songArtist.setVisibility(View.VISIBLE);
+
                 String selectedFromList =(String) (lstviewTracksGUI.getItemAtPosition(position));
                 songArtist.setText(selectedFromList.substring(0, p.tracks.items.get(position).track.artists.get(0).name.length()));
                 songTitle.setText(selectedFromList.substring(p.tracks.items.get(position).track.artists.get(0).name.length()+3, selectedFromList.length()));

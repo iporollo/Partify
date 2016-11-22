@@ -7,7 +7,14 @@ import android.util.Log;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
+import com.spotify.sdk.android.player.Config;
+import com.spotify.sdk.android.player.ConnectionStateCallback;
+import com.spotify.sdk.android.player.Player;
+import com.spotify.sdk.android.player.Spotify;
+import com.spotify.sdk.android.player.SpotifyPlayer;
 
+import ip.partyplaylist.activity.LoginActivity;
+import ip.partyplaylist.activity.PlaylistPlayerActivity;
 import ip.partyplaylist.screen_actions.LoginScreenActions;
 import ip.partyplaylist.util.SharedPreferenceHelper;
 import ip.partyplaylist.util.SpotifyScope;
@@ -18,9 +25,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-/**
- * Created by az on 22/05/16.
- */
+
 public class LoginActivityController {
 
     private static final String TAG = LoginActivityController.class.getSimpleName();
@@ -31,6 +36,8 @@ public class LoginActivityController {
 
     private final SharedPreferenceHelper mSharedPreferenceHelper;
     private Context mContext;
+    public Player mPlayer;
+
 
     public LoginActivityController(Context context) {
         mContext = context;
@@ -44,7 +51,8 @@ public class LoginActivityController {
 
         builder.setScopes(new String[]{
                 SpotifyScope.PLAYLIST_MODIFY_PRIVATE,
-                SpotifyScope.PLAYLIST_MODIFY_PUBLIC});
+                SpotifyScope.PLAYLIST_MODIFY_PUBLIC,
+                SpotifyScope.STREAMING});
 
         AuthenticationRequest request = builder.build();
         AuthenticationClient.openLoginActivity((Activity) mContext, REQUEST_CODE, request);
@@ -71,6 +79,23 @@ public class LoginActivityController {
             }
         });
 
+        //creates spotify music player
+        Config playerConfig = new Config((Activity) mContext, accessToken, CLIENT_ID);
+        Spotify.getPlayer(playerConfig, this, new SpotifyPlayer.InitializationObserver(){
+            @Override
+            public void onInitialized(SpotifyPlayer spotifyPlayer) {
+                mPlayer = spotifyPlayer;
+                mPlayer.addConnectionStateCallback((ConnectionStateCallback) mContext);
+                mPlayer.addNotificationCallback((Player.NotificationCallback) mContext);
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                Log.e("MainActivity", "Could not initialize player: " + throwable.getMessage());
+            }
+        });
+
+
         ((LoginScreenActions) mContext).showMainScreen();
     }
 
@@ -78,5 +103,9 @@ public class LoginActivityController {
         if(mSharedPreferenceHelper.getCurrentSpotifyToken().length() != 0) {
             ((LoginScreenActions) mContext).showMainScreen();
         }
+    }
+
+    public Player getPlayer(){
+        return this.mPlayer;
     }
 }
