@@ -50,7 +50,7 @@ public class PlaylistPlayerActivity extends AppCompatActivity implements Spotify
     private SpotifyService mSpotifyService;
     private Pager<PlaylistSimple> userPlaylists;
 
-    private ProgressBar mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+    //private ProgressBar mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
     private long songDuration = 1;
 
     private Player mPlayer;
@@ -112,7 +112,7 @@ public class PlaylistPlayerActivity extends AppCompatActivity implements Spotify
                 songArtist.setText(selectedFromList.substring(0, p.tracks.items.get(position).track.artists.get(0).name.length()));
                 songTitle.setText(selectedFromList.substring(p.tracks.items.get(position).track.artists.get(0).name.length()+3, selectedFromList.length()));
 
-                initializeProgressBar();
+                //initializeProgressBar();
                 songDuration = p.tracks.items.get(position).track.duration_ms;
 
                 //miliseconds timer, call setProgressBar()
@@ -168,12 +168,6 @@ public class PlaylistPlayerActivity extends AppCompatActivity implements Spotify
     }
 
 
-
-
-
-
-
-
     private Playlist populateList() {
         // retrives all user playlists
         userPlaylists = mSpotifyService.getMyPlaylists();
@@ -184,12 +178,12 @@ public class PlaylistPlayerActivity extends AppCompatActivity implements Spotify
         return p;
     }
 
-    private void initializeProgressBar() {
-        mProgressBar.setMax(100);
-        mProgressBar.setProgress(0);
-    }
-
-    private void setProgressBar(int val) { //miliseconds
-        mProgressBar.setProgress((val / (int) songDuration));
-    }
+//    private void initializeProgressBar() {
+//        mProgressBar.setMax(100);
+//        mProgressBar.setProgress(0);
+//    }
+//
+//    private void setProgressBar(int val) { //miliseconds
+//        mProgressBar.setProgress((val / (int) songDuration));
+//    }
 }

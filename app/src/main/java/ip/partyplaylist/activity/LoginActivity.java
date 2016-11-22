@@ -46,7 +46,7 @@ public class LoginActivity extends AppCompatActivity implements
             public void onClick(View v) {
                 mLoginActivityController.onLoginUserToSpotify();
 
-                mHostButton.setVisibility(View.GONE);
+                //mHostButton.setVisibility(View.GONE);
             }
         });
 
@@ -57,7 +57,7 @@ public class LoginActivity extends AppCompatActivity implements
                 //function when Join button is clicked
                 //Join activity controller needs to be implented
 
-                mJoinButton.setVisibility(View.GONE);
+                //mJoinButton.setVisibility(View.GONE);
             }
         });
     }
@@ -66,8 +66,8 @@ public class LoginActivity extends AppCompatActivity implements
     protected void onResume() {
         super.onResume();
 
-        mHostButton.setVisibility(View.VISIBLE);
-        mJoinButton.setVisibility(View.VISIBLE);
+//        mHostButton.setVisibility(View.VISIBLE);
+//        mJoinButton.setVisibility(View.VISIBLE);
 
         mLoginActivityController.onCheckIfUserIsLoggedIn();
     }
