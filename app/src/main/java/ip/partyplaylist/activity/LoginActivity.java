@@ -113,7 +113,7 @@ public class LoginActivity extends AppCompatActivity implements
 
     @Override
     public void showMainScreen() {
-        Intent loadMainPartifyScreen = new Intent(this, PartifyMainActivity.class);
+        Intent loadMainPartifyScreen = new Intent(this, CreatePartyActivity.class);
         startActivity(loadMainPartifyScreen);
         finish();
     }
@@ -121,7 +121,7 @@ public class LoginActivity extends AppCompatActivity implements
     // shows join party screen
 //    @Override
 //    public void showJoinScreen() {
-//        Intent loadMainPartifyScreen = new Intent(this, PartifyMainActivity.class);
+//        Intent loadMainPartifyScreen = new Intent(this, CreatePartyActivity.class);
 //        startActivity(loadMainPartifyScreen);
 //        finish();
 //    }

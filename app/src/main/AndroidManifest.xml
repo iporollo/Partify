@@ -24,10 +24,6 @@
         <activity
             android:name="com.spotify.sdk.android.authentication.LoginActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <activity
-            android:name=".activity.PartifyMainActivity"
-            android:label="@string/title_activity_partify_main"
-            android:theme="@style/SplashTheme" />
         <activity android:name=".activity.SearchPartyActivity" />
         <activity android:name=".activity.CreatePartyActivity"
             android:windowSoftInputMode="adjustPan"/>
