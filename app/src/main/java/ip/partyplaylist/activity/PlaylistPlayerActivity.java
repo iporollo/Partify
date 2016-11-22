@@ -75,7 +75,7 @@ public class PlaylistPlayerActivity extends AppCompatActivity implements Spotify
         mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCreatePartyController.onAddTrackButtonPressed();
+                ///mCreatePartyController.onAddTrackButtonPressed();
             }
         });
 
