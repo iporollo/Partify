@@ -39,7 +39,7 @@ public class CreatePartyActivity extends AppCompatActivity implements
         mTracksAdapter = new PartifyTracksAdapter(mCurrentTrackList, this);
 
         mPartyNameEditText = (EditText)  findViewById(R.id.party_name_edit_text);
-        mPartyTrackList = (ListView) findViewById(R.id.party_track_list);
+        mPartyTrackList = (ListView) findViewById(R.id.party_track_list); //playlist view main -- maybe needs changing
 
         Button mCreatePartyButton = (Button) findViewById(R.id.create_party);
         mCreatePartyButton.setOnClickListener(new View.OnClickListener() {

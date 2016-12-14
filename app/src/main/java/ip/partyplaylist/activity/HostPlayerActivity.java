@@ -1,5 +1,6 @@
 package ip.partyplaylist.activity;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -29,7 +30,9 @@ import ip.partyplaylist.R;
 import ip.partyplaylist.adapter.PartifyTracksAdapter;
 import ip.partyplaylist.controllers.HostPlayerController;
 import ip.partyplaylist.controllers.PartyDetailsController;
+import ip.partyplaylist.model.Party;
 import ip.partyplaylist.model.Song;
+import ip.partyplaylist.screen_actions.HostPlayerScreenActions;
 import ip.partyplaylist.util.SharedPreferenceHelper;
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
@@ -38,9 +41,8 @@ import kaaes.spotify.webapi.android.models.Playlist;
 import kaaes.spotify.webapi.android.models.PlaylistSimple;
 
 
-public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlayer.NotificationCallback, ConnectionStateCallback{//, CreatePartyScreenActions {
+public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlayer.NotificationCallback, ConnectionStateCallback, HostPlayerScreenActions{//, CreatePartyScreenActions {
 
-    private HostPlayerController hostPlayerController;
 
 
     private Button mAddButton;
@@ -51,7 +53,7 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
     private static final String CLIENT_ID = "ea09225ef2974242a1549f3812a15496";
     public static final int SEARCH_SONG_REQUEST_CODE = 1;
 
-    private PartyDetailsController mPartyDetailsController;
+    private HostPlayerController mHostPlayerController;
     private SharedPreferenceHelper mSharedPreferenceHelper;
     private SpotifyService mSpotifyService;
     private Pager<PlaylistSimple> userPlaylists;
@@ -83,17 +85,12 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
         songArtist.setVisibility(View.GONE);
 /////////////////////////////////////////////////////////////////////////////////////ADD BUTTON
 
-        //todo create controller
-        //todo figure out how to update playlist
-//        Bundle intentExtras = getIntent().getExtras();
-//        Party mCurrentParty = (Party) intentExtras.get(SearchPartyActivity.CURRENT_PARTY);
-//        mPartyDetailsController = new PartyDetailsController(this, mCurrentParty);
-//        mAddButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mPartyDetailsController.onUserClicksAddTrack();
-//            }
-//        });
+        mAddButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mHostPlayerController.onAddTrackButtonPressed();
+            }
+        });
 /////////////////////////////////////////////////////////////////////////////////////ADD BUTTON
 
 //////////////////////////////////////////////////////////////////////////////////////PLAYER
@@ -113,7 +110,7 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
 
             @Override
             public void onError(Throwable throwable) {
-                Log.e("MainActivity", "Could not initialize player: " + throwable.getMessage());
+                Log.e("HostPlayerActivity", "Could not initialize player: " + throwable.getMessage());
             }
         });
 
@@ -142,7 +139,6 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
             public void onItemClick(AdapterView<?> parent, View view, int position,
                                     long id) {
 
-                //todo needs to be in controller
 
                 songTitle.setVisibility(View.VISIBLE);
                 songArtist.setVisibility(View.VISIBLE);
@@ -218,7 +214,7 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
         Log.d("LoginActivity", "User logged out");
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////PLAYER
+ //////////////////////////////////////////////////////////////////////////////////////PLAYER
     private Playlist populateList() {
         // retrives all user playlists
         userPlaylists = mSpotifyService.getMyPlaylists();
@@ -231,43 +227,32 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
 //////////////////////////////////////////////////////////////////////////////////////PLAYER
 
 
-//    @Override
-//    public void showSearchTrackScreen() {
-//        Intent startSearchSongActivity = new Intent(this, SearchTrackActivity.class);
-//        startActivityForResult(startSearchSongActivity, SEARCH_SONG_REQUEST_CODE);
-//    }
 
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == SEARCH_SONG_REQUEST_CODE) {
-//            if (resultCode == RESULT_OK) {
-//
-//                Song trackToAdd = (Song) data.getExtras().get(SearchTrackActivity.TRACK);
+
+    @Override
+    public void updateCurrentTrackList(Party mCurrentParty) {
+        mTracksAdapter = new PartifyTracksAdapter(mCurrentParty.trackList, HostPlayerActivity.this, mIsCurrentPartyOwnedByCurrentUser);
+        mPartyTrackListView.setAdapter(mTracksAdapter);
+    }
+
+    @Override
+    public void showSearchTrackScreen() {
+        Intent startSearchSongActivity = new Intent(this, SearchTrackActivity.class);
+        startActivityForResult(startSearchSongActivity, CreatePartyActivity.SEARCH_SONG_REQUEST_CODE); // activates the method below
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CreatePartyActivity.SEARCH_SONG_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                Song trackToAdd = (Song) data.getExtras().get(SearchTrackActivity.TRACK);
+                //mHostPlayerController.onUserAddedTrack(trackToAdd);
 //                mCurrentTrackList.add(trackToAdd);
 //                mTracksAdapter = new PartifyTracksAdapter(mCurrentTrackList, CreatePartyActivity.this);
 //                mPartyTrackList.setAdapter(mTracksAdapter);
-//                mPartyTrackList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//                    @Override
-//                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                        mCurrentTrackList.remove(position);
-//                        mTracksAdapter = new PartifyTracksAdapter(mCurrentTrackList, CreatePartyActivity.this);
-//                        mPartyTrackList.setAdapter(mTracksAdapter);
-//                    }
-//
-//                });
-//
-//            }
-//        }
-//    }
+            }
+        }
+    }
 
-
-//    private void initializeProgressBar() {
-//        mProgressBar.setMax(100);
-//        mProgressBar.setProgress(0);
-//    }
-//
-//    private void setProgressBar(int val) { //miliseconds
-//        mProgressBar.setProgress((val / (int) songDuration));
-//    }
 }
