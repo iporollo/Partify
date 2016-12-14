@@ -9,7 +9,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
 
-import ip.partyplaylist.model.PartifyTrack;
+import ip.partyplaylist.model.Song;
 import ip.partyplaylist.model.Party;
 import ip.partyplaylist.screen_actions.PartyDetailsScreenActions;
 import ip.partyplaylist.util.SharedPreferenceHelper;
@@ -21,9 +21,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-/**
- * Created by az on 29/05/16.
- */
+
 public class PartyDetailsController {
     private static final String TAG = PartyDetailsController.class.getSimpleName();
     private final PartyDetailsScreenActions mPartyDetailsScreenActions;
@@ -48,7 +46,7 @@ public class PartyDetailsController {
         mPartyDetailsScreenActions.showSearchTrackScreen();
     }
 
-    public void onUserAddedTrack(PartifyTrack trackToAdd) {
+    public void onUserAddedTrack(Song trackToAdd) {
         mCurrentParty.addTrack(trackToAdd);
 
         updateParty();
@@ -66,9 +64,9 @@ public class PartyDetailsController {
         });
     }
 
-    public void onHostClicksTrack(final PartifyTrack trackToAdd) {
+    public void onHostClicksTrack(final Song trackToAdd) {
         HashMap parametersMap = new HashMap();
-        parametersMap.put("uris", trackToAdd.mId);
+        parametersMap.put("uris", trackToAdd.songID);
 
         mSpotifyService.addTracksToPlaylist(
                 mCurrentParty.hostId,
@@ -88,7 +86,7 @@ public class PartyDetailsController {
                 });
     }
 
-    private void removeTrackFromParty(PartifyTrack trackToAdd) {
+    private void removeTrackFromParty(Song trackToAdd) {
         mCurrentParty.trackList.remove(trackToAdd);
 
         updateParty();

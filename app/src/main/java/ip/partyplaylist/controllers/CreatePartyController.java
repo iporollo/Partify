@@ -10,7 +10,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import ip.partyplaylist.model.PartifyTrack;
+import ip.partyplaylist.model.Song;
 import ip.partyplaylist.model.Party;
 import ip.partyplaylist.screen_actions.CreatePartyScreenActions;
 import ip.partyplaylist.util.SharedPreferenceHelper;
@@ -25,9 +25,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-/**
- * Created by az on 22/05/16.
- */
+
 public class CreatePartyController {
     private static final String TAG = CreatePartyController.class.getSimpleName();
     private final CreatePartyScreenActions mCreatePartyScreenActions;
@@ -45,7 +43,7 @@ public class CreatePartyController {
 
     }
 
-    public void onSaveParty(String partyName, ArrayList<PartifyTrack> trackList) {
+    public void onSaveParty(String partyName, ArrayList<Song> trackList) {
         if (partyName.trim().length() == 0) {
             mCreatePartyScreenActions.showError("Party Name Invalid");
         } else {
@@ -103,8 +101,8 @@ public class CreatePartyController {
 
         StringBuffer tracksParams = new StringBuffer();
 
-        for (PartifyTrack track : mCurrentParty.trackList) {
-            tracksParams.append(track.mId).append(",");
+        for (Song track : mCurrentParty.trackList) {
+            tracksParams.append(track.songID).append(",");
         }
 
         HashMap parametersMap = new HashMap();

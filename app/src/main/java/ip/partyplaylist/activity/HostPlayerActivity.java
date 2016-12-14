@@ -1,6 +1,5 @@
 package ip.partyplaylist.activity;
 
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -12,7 +11,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.spotify.sdk.android.player.Config;
@@ -28,8 +26,10 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import ip.partyplaylist.R;
-import ip.partyplaylist.controllers.CreatePartyController;
-import ip.partyplaylist.controllers.LoginActivityController;
+import ip.partyplaylist.adapter.PartifyTracksAdapter;
+import ip.partyplaylist.controllers.HostPlayerController;
+import ip.partyplaylist.controllers.PartyDetailsController;
+import ip.partyplaylist.model.Song;
 import ip.partyplaylist.util.SharedPreferenceHelper;
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
@@ -38,7 +38,10 @@ import kaaes.spotify.webapi.android.models.Playlist;
 import kaaes.spotify.webapi.android.models.PlaylistSimple;
 
 
-public class PlaylistPlayerActivity extends AppCompatActivity implements SpotifyPlayer.NotificationCallback, ConnectionStateCallback {
+public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlayer.NotificationCallback, ConnectionStateCallback{//, CreatePartyScreenActions {
+
+    private HostPlayerController hostPlayerController;
+
 
     private Button mAddButton;
     private TextView songTitle;
@@ -46,13 +49,16 @@ public class PlaylistPlayerActivity extends AppCompatActivity implements Spotify
     private ImageView albumCover;
 
     private static final String CLIENT_ID = "ea09225ef2974242a1549f3812a15496";
+    public static final int SEARCH_SONG_REQUEST_CODE = 1;
 
-
-    private CreatePartyController mCreatePartyController;
-    private LoginActivityController mLoginActivityController;
+    private PartyDetailsController mPartyDetailsController;
     private SharedPreferenceHelper mSharedPreferenceHelper;
     private SpotifyService mSpotifyService;
     private Pager<PlaylistSimple> userPlaylists;
+    private ArrayList<Song> mPartyTrackList;
+    private ListView mPartyTrackListView;
+    private PartifyTracksAdapter mTracksAdapter;
+    private boolean mIsCurrentPartyOwnedByCurrentUser;
 
     //private ProgressBar mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
     private long songDuration = 1;
@@ -64,6 +70,7 @@ public class PlaylistPlayerActivity extends AppCompatActivity implements Spotify
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.playlist_view_main);
+        mSharedPreferenceHelper = new SharedPreferenceHelper(this);
 
         //mCreatePartyController = new CreatePartyController(this);
 
@@ -74,31 +81,34 @@ public class PlaylistPlayerActivity extends AppCompatActivity implements Spotify
 
         songTitle.setVisibility(View.GONE);
         songArtist.setVisibility(View.GONE);
+/////////////////////////////////////////////////////////////////////////////////////ADD BUTTON
 
+        //todo create controller
+        //todo figure out how to update playlist
+//        Bundle intentExtras = getIntent().getExtras();
+//        Party mCurrentParty = (Party) intentExtras.get(SearchPartyActivity.CURRENT_PARTY);
+//        mPartyDetailsController = new PartyDetailsController(this, mCurrentParty);
+//        mAddButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mPartyDetailsController.onUserClicksAddTrack();
+//            }
+//        });
+/////////////////////////////////////////////////////////////////////////////////////ADD BUTTON
 
-        //todo needs to show add song screen
-        mAddButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ///mCreatePartyController.onAddTrackButtonPressed();
-            }
-        });
-
-
-        mSharedPreferenceHelper = new SharedPreferenceHelper(this);
-
+//////////////////////////////////////////////////////////////////////////////////////PLAYER
         final SpotifyApi mSpotifyApi = new SpotifyApi();
         mSpotifyApi.setAccessToken(mSharedPreferenceHelper.getCurrentSpotifyToken());
         mSpotifyService = mSpotifyApi.getService();
 
         //creates spotify music player
-        Config playerConfig = new Config(PlaylistPlayerActivity.this, mSharedPreferenceHelper.getCurrentSpotifyToken(), CLIENT_ID);
+        Config playerConfig = new Config(HostPlayerActivity.this, mSharedPreferenceHelper.getCurrentSpotifyToken(), CLIENT_ID);
         Spotify.getPlayer(playerConfig, this, new SpotifyPlayer.InitializationObserver(){
             @Override
             public void onInitialized(SpotifyPlayer spotifyPlayer) {
                 mPlayer = spotifyPlayer;
-                mPlayer.addConnectionStateCallback(PlaylistPlayerActivity.this);
-                mPlayer.addNotificationCallback(PlaylistPlayerActivity.this);
+                mPlayer.addConnectionStateCallback(HostPlayerActivity.this);
+                mPlayer.addNotificationCallback(HostPlayerActivity.this);
             }
 
             @Override
@@ -127,7 +137,6 @@ public class PlaylistPlayerActivity extends AppCompatActivity implements Spotify
                 new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, songList);
         // Set The Adapter
         lstviewTracksGUI.setAdapter(arrayAdapter);
-
         lstviewTracksGUI.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position,
@@ -163,6 +172,8 @@ public class PlaylistPlayerActivity extends AppCompatActivity implements Spotify
         });
 
     }
+
+    //////////////////////////////////////////////////////////////////////////////////////PLAYER
 
     @Override
     protected void onDestroy() {
@@ -207,7 +218,7 @@ public class PlaylistPlayerActivity extends AppCompatActivity implements Spotify
         Log.d("LoginActivity", "User logged out");
     }
 
-
+    //////////////////////////////////////////////////////////////////////////////////////PLAYER
     private Playlist populateList() {
         // retrives all user playlists
         userPlaylists = mSpotifyService.getMyPlaylists();
@@ -217,6 +228,39 @@ public class PlaylistPlayerActivity extends AppCompatActivity implements Spotify
         Playlist p = mSpotifyService.getPlaylist(mSharedPreferenceHelper.getCurrentUserId(), playlistDesired);
         return p;
     }
+//////////////////////////////////////////////////////////////////////////////////////PLAYER
+
+
+//    @Override
+//    public void showSearchTrackScreen() {
+//        Intent startSearchSongActivity = new Intent(this, SearchTrackActivity.class);
+//        startActivityForResult(startSearchSongActivity, SEARCH_SONG_REQUEST_CODE);
+//    }
+
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == SEARCH_SONG_REQUEST_CODE) {
+//            if (resultCode == RESULT_OK) {
+//
+//                Song trackToAdd = (Song) data.getExtras().get(SearchTrackActivity.TRACK);
+//                mCurrentTrackList.add(trackToAdd);
+//                mTracksAdapter = new PartifyTracksAdapter(mCurrentTrackList, CreatePartyActivity.this);
+//                mPartyTrackList.setAdapter(mTracksAdapter);
+//                mPartyTrackList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                    @Override
+//                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                        mCurrentTrackList.remove(position);
+//                        mTracksAdapter = new PartifyTracksAdapter(mCurrentTrackList, CreatePartyActivity.this);
+//                        mPartyTrackList.setAdapter(mTracksAdapter);
+//                    }
+//
+//                });
+//
+//            }
+//        }
+//    }
+
 
 //    private void initializeProgressBar() {
 //        mProgressBar.setMax(100);

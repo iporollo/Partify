@@ -14,14 +14,14 @@ import java.util.ArrayList;
 import ip.partyplaylist.R;
 import ip.partyplaylist.adapter.PartifyTracksAdapter;
 import ip.partyplaylist.controllers.PartyDetailsController;
-import ip.partyplaylist.model.PartifyTrack;
+import ip.partyplaylist.model.Song;
 import ip.partyplaylist.model.Party;
 import ip.partyplaylist.screen_actions.PartyDetailsScreenActions;
 import ip.partyplaylist.util.SharedPreferenceHelper;
 
 public class PartyDetailsActivity extends AppCompatActivity implements PartyDetailsScreenActions {
 
-    private ArrayList<PartifyTrack> mPartyTrackList;
+    private ArrayList<Song> mPartyTrackList;
     private ListView mPartyTrackListView;
     private PartifyTracksAdapter mTracksAdapter;
     private PartyDetailsController mPartyDetailsController;
@@ -95,7 +95,7 @@ public class PartyDetailsActivity extends AppCompatActivity implements PartyDeta
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CreatePartyActivity.SEARCH_SONG_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                PartifyTrack trackToAdd = (PartifyTrack) data.getExtras().get(SearchTrackActivity.TRACK);
+                Song trackToAdd = (Song) data.getExtras().get(SearchTrackActivity.TRACK);
                 mPartyDetailsController.onUserAddedTrack(trackToAdd);
             }
         }

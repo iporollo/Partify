@@ -13,9 +13,7 @@ import java.util.List;
 import ip.partyplaylist.R;
 import kaaes.spotify.webapi.android.models.Track;
 
-/**
- * Created by az on 22/05/16.
- */
+
 public class TracksAdapter extends BaseAdapter {
 
     private final Context mContext;

@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import ip.partyplaylist.R;
 import ip.partyplaylist.adapter.PartifyTracksAdapter;
 import ip.partyplaylist.controllers.CreatePartyController;
-import ip.partyplaylist.model.PartifyTrack;
+import ip.partyplaylist.model.Song;
 import ip.partyplaylist.screen_actions.CreatePartyScreenActions;
 
 public class CreatePartyActivity extends AppCompatActivity implements
@@ -27,7 +27,7 @@ public class CreatePartyActivity extends AppCompatActivity implements
     private EditText mPartyNameEditText;
     private ListView mPartyTrackList;
     private PartifyTracksAdapter mTracksAdapter;
-    private ArrayList<PartifyTrack> mCurrentTrackList = new ArrayList<>();
+    private ArrayList<Song> mCurrentTrackList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +80,7 @@ public class CreatePartyActivity extends AppCompatActivity implements
     @Override
     public void showPartyCreatedScreen() {
         Toast.makeText(this, "Party Created!", Toast.LENGTH_SHORT).show();
-        Intent i = new Intent(CreatePartyActivity.this, PlaylistPlayerActivity.class);
+        Intent i = new Intent(CreatePartyActivity.this, HostPlayerActivity.class);
         startActivity(i);
     }
 
@@ -96,7 +96,7 @@ public class CreatePartyActivity extends AppCompatActivity implements
         if (requestCode == SEARCH_SONG_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
 
-                PartifyTrack trackToAdd = (PartifyTrack) data.getExtras().get(SearchTrackActivity.TRACK);
+                Song trackToAdd = (Song) data.getExtras().get(SearchTrackActivity.TRACK);
                 mCurrentTrackList.add(trackToAdd);
                 mTracksAdapter = new PartifyTracksAdapter(mCurrentTrackList, CreatePartyActivity.this);
                 mPartyTrackList.setAdapter(mTracksAdapter);

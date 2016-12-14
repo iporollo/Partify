@@ -12,25 +12,23 @@ import android.widget.TextView;
 import java.util.List;
 
 import ip.partyplaylist.R;
-import ip.partyplaylist.model.PartifyTrack;
+import ip.partyplaylist.model.Song;
 
-/**
- * Created by az on 22/05/16.
- */
+
 public class PartifyTracksAdapter extends BaseAdapter {
 
     private final Context mContext;
     private boolean mIsCurrentPartyOwnedByCurrentUser;
-    private List<PartifyTrack> mTracks;
+    private List<Song> mTracks;
 
-    public PartifyTracksAdapter(List<PartifyTrack> tracks, Context context,
+    public PartifyTracksAdapter(List<Song> tracks, Context context,
                                 boolean isCurrentPartyOwnedByCurrentUser) {
         mContext = context;
         mTracks = tracks;
         mIsCurrentPartyOwnedByCurrentUser = isCurrentPartyOwnedByCurrentUser;
     }
 
-    public PartifyTracksAdapter(List<PartifyTrack> tracks, Context context) {
+    public PartifyTracksAdapter(List<Song> tracks, Context context) {
         mContext = context;
         mTracks = tracks;
     }
@@ -41,7 +39,7 @@ public class PartifyTracksAdapter extends BaseAdapter {
     }
 
     @Override
-    public PartifyTrack getItem(int position) {
+    public Song getItem(int position) {
         return mTracks.get(position);
     }
 
@@ -70,11 +68,11 @@ public class PartifyTracksAdapter extends BaseAdapter {
             viewHolder = (ViewHolderItem) convertView.getTag();
         }
 
-        PartifyTrack track = mTracks.get(position);
+        Song track = mTracks.get(position);
 
         if(track != null) {
-            viewHolder.trackNameTV.setText(track.mName);
-            viewHolder.trackArtistTV.setText("(" + track.mArtistName + ")");
+            viewHolder.trackNameTV.setText(track.songName);
+            viewHolder.trackArtistTV.setText("(" + track.songArtistName + ")");
         }
 
         viewHolder.addTrackIcon.setVisibility(mIsCurrentPartyOwnedByCurrentUser ?
