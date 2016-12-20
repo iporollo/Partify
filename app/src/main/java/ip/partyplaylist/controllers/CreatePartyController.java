@@ -48,6 +48,7 @@ public class CreatePartyController {
             mCreatePartyScreenActions.showError("Party Name Invalid");
         } else {
             mCurrentParty = new Party(partyName, trackList);
+            mSharedPreferenceHelper.saveCurrentPlayListName(partyName);
 
             createSpotifyPlaylist();
         }
@@ -128,7 +129,7 @@ public class CreatePartyController {
     }
 
     private void saveNewParty(Party tmpParty) {
-        // Tracks have been added to Spotify playlist, so no need to add them to Firebase too
+        // Tracks have been added to Spotify playlist, will need to save to firebase for the specific playlist code
         mCurrentParty.trackList.clear();
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();

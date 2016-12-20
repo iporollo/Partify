@@ -7,6 +7,7 @@ public class Song implements Serializable {
     public String songName;
     public String songArtistName;
     public String songID;
+    public String imageURL;
 
     public Song() {}
 
@@ -14,5 +15,12 @@ public class Song implements Serializable {
         songName = name;
         songArtistName = artistName;
         songID = id;
+    }
+
+    public Song(String name, String artistName, String id, String imgURL) {
+        songName = name;
+        songArtistName = artistName;
+        songID = id;
+        imageURL = imgURL;
     }
 }

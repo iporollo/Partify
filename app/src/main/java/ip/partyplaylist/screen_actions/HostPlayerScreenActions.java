@@ -10,5 +10,5 @@ public interface HostPlayerScreenActions {
 
         void showSearchTrackScreen();
 
-        void updateCurrentTrackList(Party mCurrentParty);
+        void updateCurrentFirebaseParty(Party mCurrentParty);
 }

@@ -46,6 +46,7 @@ public class CreatePartyActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 mCreatePartyController.onSaveParty(mPartyNameEditText.getText().toString(), mCurrentTrackList);
+                //here we need to save to firebase with unique party code number
             }
         });
 
@@ -79,6 +80,7 @@ public class CreatePartyActivity extends AppCompatActivity implements
 
     @Override
     public void showPartyCreatedScreen() {
+        ///show unique code number
         Toast.makeText(this, "Party Created!", Toast.LENGTH_SHORT).show();
         Intent i = new Intent(CreatePartyActivity.this, HostPlayerActivity.class);
         startActivity(i);
@@ -98,17 +100,17 @@ public class CreatePartyActivity extends AppCompatActivity implements
 
                 Song trackToAdd = (Song) data.getExtras().get(SearchTrackActivity.TRACK);
                 mCurrentTrackList.add(trackToAdd);
-                mTracksAdapter = new PartifyTracksAdapter(mCurrentTrackList, CreatePartyActivity.this);
-                mPartyTrackList.setAdapter(mTracksAdapter);
-                mPartyTrackList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        mCurrentTrackList.remove(position);
-                        mTracksAdapter = new PartifyTracksAdapter(mCurrentTrackList, CreatePartyActivity.this);
-                        mPartyTrackList.setAdapter(mTracksAdapter);
-                    }
-
-                });
+//                mTracksAdapter = new PartifyTracksAdapter(mCurrentTrackList, CreatePartyActivity.this);
+//                mPartyTrackList.setAdapter(mTracksAdapter);
+//                mPartyTrackList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                    @Override
+//                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                        mCurrentTrackList.remove(position);
+//                        mTracksAdapter = new PartifyTracksAdapter(mCurrentTrackList, CreatePartyActivity.this);
+//                        mPartyTrackList.setAdapter(mTracksAdapter);
+//                    }
+//
+//                });
 
             }
         }

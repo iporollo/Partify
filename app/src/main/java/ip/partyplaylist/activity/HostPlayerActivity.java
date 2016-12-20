@@ -25,11 +25,11 @@ import com.spotify.sdk.android.player.SpotifyPlayer;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import ip.partyplaylist.R;
 import ip.partyplaylist.adapter.PartifyTracksAdapter;
 import ip.partyplaylist.controllers.HostPlayerController;
-import ip.partyplaylist.controllers.PartyDetailsController;
 import ip.partyplaylist.model.Party;
 import ip.partyplaylist.model.Song;
 import ip.partyplaylist.screen_actions.HostPlayerScreenActions;
@@ -39,42 +39,39 @@ import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Pager;
 import kaaes.spotify.webapi.android.models.Playlist;
 import kaaes.spotify.webapi.android.models.PlaylistSimple;
+import kaaes.spotify.webapi.android.models.PlaylistTrack;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 
-public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlayer.NotificationCallback, ConnectionStateCallback, HostPlayerScreenActions{//, CreatePartyScreenActions {
+public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlayer.NotificationCallback, HostPlayerScreenActions{//, CreatePartyScreenActions {
 
+    private static final String CLIENT_ID = "ea09225ef2974242a1549f3812a15496";
 
+    private Party mCurrentParty;
+    private ArrayList<Song> mTrackList;
+    private ArrayList<String> mSongListOfStrings;
+    private Player mPlayer;
+    private HostPlayerController mHostPlayerController;
+    private SharedPreferenceHelper mSharedPreferenceHelper;
+    private SpotifyService mSpotifyService;
 
     private Button mAddButton;
     private TextView songTitle;
     private TextView songArtist;
     private ImageView albumCover;
 
-    private static final String CLIENT_ID = "ea09225ef2974242a1549f3812a15496";
-    public static final int SEARCH_SONG_REQUEST_CODE = 1;
 
-    private HostPlayerController mHostPlayerController;
-    private SharedPreferenceHelper mSharedPreferenceHelper;
-    private SpotifyService mSpotifyService;
-    private Pager<PlaylistSimple> userPlaylists;
-    private ArrayList<Song> mPartyTrackList;
-    private ListView mPartyTrackListView;
-    private PartifyTracksAdapter mTracksAdapter;
-    private boolean mIsCurrentPartyOwnedByCurrentUser;
 
-    //private ProgressBar mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
-    private long songDuration = 1;
 
-    private Player mPlayer;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.playlist_view_main);
+        setContentView(R.layout.activity_host_player);
         mSharedPreferenceHelper = new SharedPreferenceHelper(this);
-
-        //mCreatePartyController = new CreatePartyController(this);
 
         mAddButton = (Button) findViewById(R.id.btnAddSong);
         songTitle = (TextView) findViewById(R.id.txtSongTitle);
@@ -83,7 +80,6 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
 
         songTitle.setVisibility(View.GONE);
         songArtist.setVisibility(View.GONE);
-/////////////////////////////////////////////////////////////////////////////////////ADD BUTTON
 
         mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,7 +87,6 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
                 mHostPlayerController.onAddTrackButtonPressed();
             }
         });
-/////////////////////////////////////////////////////////////////////////////////////ADD BUTTON
 
 //////////////////////////////////////////////////////////////////////////////////////PLAYER
         final SpotifyApi mSpotifyApi = new SpotifyApi();
@@ -104,7 +99,7 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
             @Override
             public void onInitialized(SpotifyPlayer spotifyPlayer) {
                 mPlayer = spotifyPlayer;
-                mPlayer.addConnectionStateCallback(HostPlayerActivity.this);
+                //mPlayer.addConnectionStateCallback(HostPlayerActivity.this);
                 mPlayer.addNotificationCallback(HostPlayerActivity.this);
             }
 
@@ -117,21 +112,36 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
 
 
         // retrives playlist to be displayed
-        final Playlist p = populateList();
+        Playlist p = getCurrentPlaylist();
 
         // generates arraylist to populate GUI list
-        ArrayList<String> songList = new ArrayList<>();
+        mSongListOfStrings = new ArrayList<>();
+        mTrackList = new ArrayList<>();
+
         for (int i = 0; i < p.tracks.total; i++) {
 
-            songList.add(p.tracks.items.get(i).track.artists.get(0).name + " - " + p.tracks.items.get(i).track.name);
+            Song currentSong = new Song(p.tracks.items.get(i).track.name,
+                    p.tracks.items.get(i).track.artists.get(0).name,
+                    p.tracks.items.get(i).track.uri,
+                    p.tracks.items.get(i).track.album.images.get(0).url);
+
+            mTrackList.add(currentSong);
+
+            mSongListOfStrings.add(currentSong.songArtistName + " - " + currentSong.songName);
         }
+
+        //todo possibly needs to be in controller
+        mCurrentParty = new Party(mSharedPreferenceHelper.getCurrentPlaylistName(), mTrackList);
+        mCurrentParty.setPlaylistId(mSharedPreferenceHelper.getCurrentPlaylistId());
+        mCurrentParty.setHostId(mSharedPreferenceHelper.getCurrentUserId());
+        mHostPlayerController = new HostPlayerController(this, mCurrentParty);
 
         // Get the reference of ListViewAnimals
         final ListView lstviewTracksGUI=(ListView)findViewById(R.id.lstviewTracks);
 
         // Create The Adapter with passing ArrayList as 3rd parameter
         ArrayAdapter<String> arrayAdapter =
-                new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, songList);
+                new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, mSongListOfStrings);
         // Set The Adapter
         lstviewTracksGUI.setAdapter(arrayAdapter);
         lstviewTracksGUI.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -139,100 +149,49 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
             public void onItemClick(AdapterView<?> parent, View view, int position,
                                     long id) {
 
-
+            //todo place into controller
                 songTitle.setVisibility(View.VISIBLE);
                 songArtist.setVisibility(View.VISIBLE);
 
-                String selectedFromList =(String) (lstviewTracksGUI.getItemAtPosition(position));
-                songArtist.setText(selectedFromList.substring(0, p.tracks.items.get(position).track.artists.get(0).name.length()));
-                songTitle.setText(selectedFromList.substring(p.tracks.items.get(position).track.artists.get(0).name.length()+3, selectedFromList.length()));
+                songArtist.setText(mTrackList.get(position).songArtistName);
+                songTitle.setText(mTrackList.get(position).songName);
 
-                //initializeProgressBar();
-                songDuration = p.tracks.items.get(position).track.duration_ms;
-
-                //miliseconds timer, call setProgressBar()
+                //songArtist.setText(selectedFromList.substring(0, p.tracks.items.get(position).track.artists.get(0).name.length()));
+                //songTitle.setText(selectedFromList.substring(p.tracks.items.get(position).track.artists.get(0).name.length()+3, selectedFromList.length()));
 
                 try {
-                    String img_url= p.tracks.items.get(position).track.album.images.get(0).url;
+                    String img_url = mTrackList.get(position).imageURL;
+                    //String img_url= p.tracks.items.get(position).track.album.images.get(0).url;
                     URL url = new URL(img_url);
                     Bitmap bmp;
                     bmp= BitmapFactory.decodeStream(url.openConnection().getInputStream());
                     albumCover.setImageBitmap(bmp);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    System.err.print("Error getting album image");
                 }
 
-                mPlayer.playUri(null, p.tracks.items.get(position).track.uri, 0, 0);
+                mPlayer.playUri(null, mTrackList.get(position).songID, 0, 0);
+                //mPlayer.playUri(null, p.tracks.items.get(position).track.uri, 0, 0);
 
             }
         });
 
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////PLAYER
-
-    @Override
-    protected void onDestroy() {
-        // VERY IMPORTANT! This must always be called or else you will leak resources
-        Spotify.destroyPlayer(this);
-        super.onDestroy();
-    }
 
 
-    @Override
-    public void onLoggedIn() {
-        Log.d("LoginActivity", "User logged in");
-    }
-
-    @Override
-    public void onLoginFailed(int error) {
-        Log.d("LoginActivity", "Login failed");
-    }
-
-    @Override
-    public void onTemporaryError() {
-        Log.d("LoginActivity", "Temporary error occurred");
-    }
-
-    @Override
-    public void onPlaybackError(Error error) {
-        Log.d("LoginActivity", "Login failed");
-    }
-
-    @Override
-    public void onPlaybackEvent(PlayerEvent event) {
-        Log.d("LoginActivity", "Login failed");
-    }
-
-    @Override
-    public void onConnectionMessage(String message) {
-        Log.d("LoginActivity", "Login failed");
-    }
-
-    @Override
-    public void onLoggedOut() {
-        Log.d("LoginActivity", "User logged out");
-    }
-
- //////////////////////////////////////////////////////////////////////////////////////PLAYER
-    private Playlist populateList() {
+    //todo place in controller
+    private Playlist getCurrentPlaylist() {
         // retrives all user playlists
-        userPlaylists = mSpotifyService.getMyPlaylists();
-
         String playlistDesired = mSharedPreferenceHelper.getCurrentPlaylistId();
 
         Playlist p = mSpotifyService.getPlaylist(mSharedPreferenceHelper.getCurrentUserId(), playlistDesired);
         return p;
     }
-//////////////////////////////////////////////////////////////////////////////////////PLAYER
-
-
-
 
     @Override
-    public void updateCurrentTrackList(Party mCurrentParty) {
-        mTracksAdapter = new PartifyTracksAdapter(mCurrentParty.trackList, HostPlayerActivity.this, mIsCurrentPartyOwnedByCurrentUser);
-        mPartyTrackListView.setAdapter(mTracksAdapter);
+    public void updateCurrentFirebaseParty(Party mCurrentParty) {
+        //todo firebase update of party
     }
 
     @Override
@@ -247,12 +206,95 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
         if (requestCode == CreatePartyActivity.SEARCH_SONG_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 Song trackToAdd = (Song) data.getExtras().get(SearchTrackActivity.TRACK);
-                //mHostPlayerController.onUserAddedTrack(trackToAdd);
-//                mCurrentTrackList.add(trackToAdd);
-//                mTracksAdapter = new PartifyTracksAdapter(mCurrentTrackList, CreatePartyActivity.this);
-//                mPartyTrackList.setAdapter(mTracksAdapter);
+
+                mTrackList.add(trackToAdd);
+                mCurrentParty.addTrack(trackToAdd);
+                mSongListOfStrings.add(trackToAdd.songArtistName + " - " + trackToAdd.songName);
+
+                updateCurrentSpotifyPlaylist();
             }
         }
     }
+
+    //this may have a problem due to re-adding of songs into playlist...
+    //does spotify throw an error or automatically detect the re-addition of a song
+    //may need to pull playlist, loop through it, add songs that are not already in it
+    public void updateCurrentSpotifyPlaylist() {
+
+        StringBuffer tracksParams = new StringBuffer();
+
+        for (Song track : mCurrentParty.trackList) {
+            tracksParams.append(track.songID).append(",");
+        }
+
+        HashMap parametersMap = new HashMap();
+        parametersMap.put("uris", tracksParams.toString());
+
+
+        mSpotifyService.addTracksToPlaylist(
+                mCurrentParty.hostId,
+                mCurrentParty.playlistId,
+                parametersMap,
+                new HashMap<String, Object>(),
+                new Callback<Pager<PlaylistTrack>>() {
+                    @Override
+                    public void success(Pager<PlaylistTrack> playlistTrackPager, Response response) {
+                        updateCurrentFirebaseParty(mCurrentParty);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        Log.d("HostPlayerActivity", "Adding Tracks to Playlist Failed.");
+                    }
+                });
+
+    }
+
+
+    @Override
+    public void onPlaybackError(Error error) {
+        Log.d("HostPlayerActivity", "Playback failed");
+    }
+
+    @Override
+    public void onPlaybackEvent(PlayerEvent event) {
+        Log.d("HostPlayerActivity", "playback event logging right here");
+    }
+
+    @Override
+    protected void onDestroy() {
+        // VERY IMPORTANT! This must always be called or else you will leak resources
+        Spotify.destroyPlayer(this);
+        super.onDestroy();
+    }
+
+
+//    @Override
+//    public void onLoggedIn() {
+//        Log.d("LoginActivity", "User logged in");
+//    }
+//
+//    @Override
+//    public void onLoginFailed(int error) {
+//        Log.d("LoginActivity", "Login failed");
+//    }
+//
+//    @Override
+//    public void onTemporaryError() {
+//        Log.d("LoginActivity", "Temporary error occurred");
+//    }
+//
+
+//
+//    @Override
+//    public void onConnectionMessage(String message) {
+//        Log.d("LoginActivity", "Login failed");
+//    }
+//
+//    @Override
+//    public void onLoggedOut() {
+//        Log.d("LoginActivity", "User logged out");
+//    }
+
 
 }
