@@ -68,7 +68,8 @@ public class SearchTrackActivity extends AppCompatActivity implements SearchTrac
                 Song song = new Song(
                         selectedTrack.name,
                         selectedTrack.artists.get(0).name,
-                        "spotify:track:" + selectedTrack.id);
+                        "spotify:track:" + selectedTrack.id,
+                        selectedTrack.album.images.get(0).url);
 
                 Intent resultData = new Intent();
                 resultData.putExtra(TRACK, song);

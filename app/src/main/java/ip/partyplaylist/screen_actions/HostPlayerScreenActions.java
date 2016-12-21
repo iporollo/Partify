@@ -9,6 +9,4 @@ import ip.partyplaylist.model.Party;
 public interface HostPlayerScreenActions {
 
         void showSearchTrackScreen();
-
-        void updateCurrentFirebaseParty(Party mCurrentParty);
 }
