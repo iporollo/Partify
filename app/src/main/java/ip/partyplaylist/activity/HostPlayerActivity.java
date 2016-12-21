@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.spotify.sdk.android.player.Config;
 import com.spotify.sdk.android.player.Error;
@@ -144,14 +145,25 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
         if (requestCode == CreatePartyActivity.SEARCH_SONG_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 Song trackToAdd = (Song) data.getExtras().get(SearchTrackActivity.TRACK);
+                boolean isAlreadyInList = false;
 
                 //todo need to check to see if song is already in tracklist, dont add it if it is
+                for(int i = 0; i <mTrackList.size(); i++){
+                    if(mTrackList.get(i).songID.equals(trackToAdd.songID)){
+                        isAlreadyInList = true;
+                    }
+                }
 
-                mTrackList.add(trackToAdd);
-                //mCurrentParty.addTrack(trackToAdd);
-                mSongListOfStrings.add(trackToAdd.songArtistName + " - " + trackToAdd.songName);
+                if(!isAlreadyInList){
+                    mTrackList.add(trackToAdd);
+                    mSongListOfStrings.add(trackToAdd.songArtistName + " - " + trackToAdd.songName);
 
-                mHostPlayerController.updateCurrentSpotifyPlaylist(mCurrentParty);
+                    mHostPlayerController.updateCurrentSpotifyPlaylist(mCurrentParty);
+                    Toast.makeText(this, "Song Added!", Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(this, "Already in playlist!", Toast.LENGTH_SHORT).show();
+                }
+
             }
         }
     }
