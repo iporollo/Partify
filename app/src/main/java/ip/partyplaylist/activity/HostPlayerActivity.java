@@ -6,6 +6,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -16,6 +17,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +25,7 @@ import com.spotify.sdk.android.player.Config;
 import com.spotify.sdk.android.player.Error;
 import com.spotify.sdk.android.player.Player;
 import com.spotify.sdk.android.player.PlayerEvent;
+import com.spotify.sdk.android.player.PlaybackState;
 import com.spotify.sdk.android.player.Spotify;
 import com.spotify.sdk.android.player.SpotifyPlayer;
 
@@ -36,8 +39,7 @@ import ip.partyplaylist.model.Party;
 import ip.partyplaylist.model.Song;
 import ip.partyplaylist.screen_actions.HostPlayerScreenActions;
 import ip.partyplaylist.util.SharedPreferenceHelper;
-import kaaes.spotify.webapi.android.models.Image;
-import kaaes.spotify.webapi.android.models.Playlist;
+
 
 
 public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlayer.NotificationCallback, HostPlayerScreenActions{//, CreatePartyScreenActions {
@@ -48,6 +50,7 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
     private ArrayList<Song> mTrackList;
     private ArrayList<String> mSongListOfStrings;
     private Player mPlayer;
+    private PlaybackState mCurrentPlayerState;
     private HostPlayerController mHostPlayerController;
     private SharedPreferenceHelper mSharedPreferenceHelper;
 
@@ -59,7 +62,13 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
     private ImageButton mPlayButton;
     private ImageButton mPauseButton;
     private ImageButton mSkipForwardButton;
+    private ImageButton mRepeatButton;
+    private ImageButton mShuffleButton;
+    private ProgressBar mSongProgress;
+    private TextView mSongTime;
 
+    private boolean isShuffleClicked = false;
+    private boolean isRepeatClicked = false;
 
 
     @Override
@@ -77,6 +86,11 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
         mPlayButton = (ImageButton) findViewById(R.id.playerPlay);
         mPauseButton = (ImageButton) findViewById(R.id.playerPause);
         mSkipForwardButton= (ImageButton) findViewById(R.id.playerSkipForward);
+        mRepeatButton= (ImageButton) findViewById(R.id.playerRepeatButton);
+        mShuffleButton= (ImageButton) findViewById(R.id.playerShuffleButton);
+        mSongProgress = (ProgressBar) findViewById(R.id.playerSongProgress);
+        mSongTime = (TextView) findViewById(R.id.playerSongTime);
+
 
         songTitle.setVisibility(View.GONE);
         songArtist.setVisibility(View.GONE);
@@ -84,7 +98,11 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
         mSkipBackButton.setClickable(false);
         mPlayButton.setClickable(false);
         mPauseButton.setClickable(false);
+        mPauseButton.setVisibility(View.GONE);
         mSkipForwardButton.setClickable(false);
+        mRepeatButton.setClickable(false);
+        mShuffleButton.setClickable(false);
+
 
         mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,8 +164,6 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
 
                 mPlayer.playUri(null, mTrackList.get(position).songID, 0, 0);
 
-                //todo add all of tracklist to play queue
-
                 int remainingPosition = position - 1;
                 for(int i = position+1; i <mTrackList.size(); i++){
                     String tempSongID = mTrackList.get(i).songID;
@@ -158,15 +174,13 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
                     mPlayer.queue(null, tempSongID);
                 }
 
-
                 //todo add a sound icon to the song tht is playing
-
-
-
 
                 mSkipBackButton.setClickable(true);
                 mPauseButton.setClickable(true);
                 mSkipForwardButton.setClickable(true);
+                mRepeatButton.setClickable(true);
+                mShuffleButton.setClickable(true);
 
             }
         });
@@ -175,7 +189,9 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
             @Override
             public void onClick(View v) {
                 mPlayButton.setClickable(false);
+                mPlayButton.setVisibility(View.GONE);
                 mPauseButton.setClickable(true);
+                mPauseButton.setVisibility(View.VISIBLE);
                 mPlayer.resume(null);
             }
         });
@@ -184,12 +200,14 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
             @Override
             public void onClick(View v) {
                 mPlayButton.setClickable(true);
+                mPlayButton.setVisibility(View.VISIBLE);
                 mPauseButton.setClickable(false);
+                mPauseButton.setVisibility(View.GONE);
                 mPlayer.pause(null);
             }
         });
 
-        mSkipBackButton .setOnClickListener(new View.OnClickListener() {
+        mSkipBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 mPlayer.skipToPrevious(null);            }
@@ -202,8 +220,37 @@ mPlayer.skipToPrevious(null);            }
             }
         });
 
+        mShuffleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isShuffleClicked){
+                    isShuffleClicked = true;
+                    mPlayer.setShuffle(null, true);
+                    mShuffleButton.setBackgroundColor(Color.RED);
+                }
+                else{
+                    isShuffleClicked=false;
+                    mPlayer.setShuffle(null, false);
+                    mShuffleButton.setBackgroundColor(Color.WHITE);
+                }
+            }
+        });
 
-
+        mRepeatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isRepeatClicked){
+                    isRepeatClicked = true;
+                    mPlayer.setRepeat(null, true);
+                    mRepeatButton.setBackgroundColor(Color.RED);
+                }
+                else{
+                    isRepeatClicked=false;
+                    mPlayer.setRepeat(null, false);
+                    mRepeatButton.setBackgroundColor(Color.WHITE);
+                }
+            }
+        });
     }
 
 
@@ -233,6 +280,7 @@ mPlayer.skipToPrevious(null);            }
                     mSongListOfStrings.add(trackToAdd.songArtistName + " - " + trackToAdd.songName);
 
                     mHostPlayerController.updateCurrentSpotifyPlaylist(mCurrentParty);
+                    mPlayer.queue(null,trackToAdd.songID);
                     Toast.makeText(this, "Song Added!", Toast.LENGTH_SHORT).show();
                 }else {
                     Toast.makeText(this, "Already in playlist!", Toast.LENGTH_SHORT).show();
@@ -251,6 +299,12 @@ mPlayer.skipToPrevious(null);            }
     @Override
     public void onPlaybackEvent(PlayerEvent event) {
         Log.d("HostPlayerActivity", "playback event logging right here");
+
+        mCurrentPlayerState = mPlayer.getPlaybackState();
+        String time = String.valueOf(mCurrentPlayerState.positionMs);
+        mSongTime.setText(time);
+        mSongProgress.setProgress((int) mCurrentPlayerState.positionMs);
+        //add animation
 
         //todo show notification in the android notification bar
 

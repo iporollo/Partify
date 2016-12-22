@@ -39,7 +39,7 @@ dependencies {
     compile 'com.spotify.sdk:spotify-auth-beta23-noconnect-2.20b@aar'
 
     // This library handles music playback
-    compile 'com.spotify.sdk:spotify-player-beta23-noconnect-2.20b@aar'
+    compile 'com.spotify.sdk:spotify-player-24-noconnect-2.20b@aar'
 
     //Android SDK Spotify Web API integration
     compile 'com.github.kaaes:spotify-web-api-android:0.4.1'
