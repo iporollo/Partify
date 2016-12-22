@@ -68,6 +68,43 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@android:drawable/ic_media_play"
+        android:id="@+id/playerPlay"
+        android:layout_alignTop="@+id/playerPause"
+        android:layout_toLeftOf="@+id/playerPause"
+        android:layout_toStartOf="@+id/playerPause" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@android:drawable/ic_media_pause"
+        android:id="@+id/playerPause"
+        android:layout_alignTop="@+id/playerSkipForward"
+        android:layout_toLeftOf="@+id/playerSkipForward"
+        android:layout_toStartOf="@+id/playerSkipForward" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@android:drawable/ic_media_previous"
+        android:id="@+id/playerSkipBack"
+        android:layout_alignTop="@+id/playerPlay"
+        android:layout_toLeftOf="@+id/playerPlay"
+        android:layout_toStartOf="@+id/playerPlay" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@android:drawable/ic_media_next"
+        android:id="@+id/playerSkipForward"
+        android:layout_marginTop="55dp"
+        android:layout_below="@+id/txtSongArtist"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
     <!--<ImageButton-->
         <!--android:id="@+id/moreImageButton"-->
         <!--android:layout_width="wrap_content"-->

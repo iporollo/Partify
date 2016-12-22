@@ -1,5 +1,8 @@
 package ip.partyplaylist.activity;
 
+import android.app.Notification;
+import android.app.PendingIntent;
+import android.app.Service;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,6 +13,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -32,6 +36,7 @@ import ip.partyplaylist.model.Party;
 import ip.partyplaylist.model.Song;
 import ip.partyplaylist.screen_actions.HostPlayerScreenActions;
 import ip.partyplaylist.util.SharedPreferenceHelper;
+import kaaes.spotify.webapi.android.models.Image;
 import kaaes.spotify.webapi.android.models.Playlist;
 
 
@@ -50,6 +55,11 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
     private TextView songTitle;
     private TextView songArtist;
     private ImageView albumCover;
+    private ImageButton mSkipBackButton;
+    private ImageButton mPlayButton;
+    private ImageButton mPauseButton;
+    private ImageButton mSkipForwardButton;
+
 
 
     @Override
@@ -63,9 +73,18 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
         songTitle = (TextView) findViewById(R.id.txtSongTitle);
         songArtist = (TextView) findViewById(R.id.txtSongArtist);
         albumCover = (ImageView) findViewById(R.id.imgSongCover);
+        mSkipBackButton = (ImageButton) findViewById(R.id.playerSkipBack);
+        mPlayButton = (ImageButton) findViewById(R.id.playerPlay);
+        mPauseButton = (ImageButton) findViewById(R.id.playerPause);
+        mSkipForwardButton= (ImageButton) findViewById(R.id.playerSkipForward);
 
         songTitle.setVisibility(View.GONE);
         songArtist.setVisibility(View.GONE);
+
+        mSkipBackButton.setClickable(false);
+        mPlayButton.setClickable(false);
+        mPauseButton.setClickable(false);
+        mSkipForwardButton.setClickable(false);
 
         mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,8 +146,50 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
 
                 mPlayer.playUri(null, mTrackList.get(position).songID, 0, 0);
 
+                //todo add a sound icon to the song tht is playing
+
+                //todo add all of tracklist to play queue
+
+                mSkipBackButton.setClickable(true);
+                mPauseButton.setClickable(true);
+                mSkipForwardButton.setClickable(true);
+
             }
         });
+
+        mPlayButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPlayButton.setClickable(false);
+                mPauseButton.setClickable(true);
+                mPlayer.resume(null);
+            }
+        });
+
+        mPauseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPlayButton.setClickable(true);
+                mPauseButton.setClickable(false);
+                mPlayer.pause(null);
+            }
+        });
+
+        mSkipForwardButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //todo skip back a song,  song then in queue
+            }
+        });
+
+        mSkipForwardButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //todo Pause the player
+            }
+        });
+
+
 
     }
 
@@ -177,6 +238,9 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
     @Override
     public void onPlaybackEvent(PlayerEvent event) {
         Log.d("HostPlayerActivity", "playback event logging right here");
+
+        //todo show notification in the android notification bar
+
     }
 
     @Override
