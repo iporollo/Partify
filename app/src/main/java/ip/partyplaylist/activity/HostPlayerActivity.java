@@ -146,9 +146,23 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
 
                 mPlayer.playUri(null, mTrackList.get(position).songID, 0, 0);
 
+                //todo add all of tracklist to play queue
+
+                int remainingPosition = position - 1;
+                for(int i = position+1; i <mTrackList.size(); i++){
+                    String tempSongID = mTrackList.get(i).songID;
+                    mPlayer.queue(null, tempSongID);
+                }
+                for(int j = 0; j < remainingPosition; j++ ){
+                    String tempSongID = mTrackList.get(j).songID;
+                    mPlayer.queue(null, tempSongID);
+                }
+
+
                 //todo add a sound icon to the song tht is playing
 
-                //todo add all of tracklist to play queue
+
+
 
                 mSkipBackButton.setClickable(true);
                 mPauseButton.setClickable(true);
@@ -175,17 +189,16 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
             }
         });
 
-        mSkipForwardButton.setOnClickListener(new View.OnClickListener() {
+        mSkipBackButton .setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //todo skip back a song,  song then in queue
-            }
+mPlayer.skipToPrevious(null);            }
         });
 
         mSkipForwardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //todo Pause the player
+                mPlayer.skipToNext(null);
             }
         });
 
