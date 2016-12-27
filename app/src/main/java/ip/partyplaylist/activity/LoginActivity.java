@@ -12,6 +12,7 @@ import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
 import com.spotify.sdk.android.player.Config;
 import com.spotify.sdk.android.player.ConnectionStateCallback;
+import com.spotify.sdk.android.player.Error;
 
 import ip.partyplaylist.R;
 import ip.partyplaylist.controllers.LoginActivityController;
@@ -102,7 +103,7 @@ public class LoginActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onLoginFailed(int error) {
+    public void onLoginFailed(Error var1) {
         Log.d("LoginActivity", "Login failed");
     }
 

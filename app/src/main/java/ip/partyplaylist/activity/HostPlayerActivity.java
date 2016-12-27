@@ -67,9 +67,6 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
     private ProgressBar mSongProgress;
     private TextView mSongTime;
 
-    private boolean isShuffleClicked = false;
-    private boolean isRepeatClicked = false;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -223,13 +220,12 @@ mPlayer.skipToPrevious(null);            }
         mShuffleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isShuffleClicked){
-                    isShuffleClicked = true;
+                mCurrentPlayerState = mPlayer.getPlaybackState();
+                if(!mCurrentPlayerState.isShuffling){
                     mPlayer.setShuffle(null, true);
                     mShuffleButton.setBackgroundColor(Color.RED);
                 }
                 else{
-                    isShuffleClicked=false;
                     mPlayer.setShuffle(null, false);
                     mShuffleButton.setBackgroundColor(Color.WHITE);
                 }
@@ -239,13 +235,12 @@ mPlayer.skipToPrevious(null);            }
         mRepeatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isRepeatClicked){
-                    isRepeatClicked = true;
+                mCurrentPlayerState = mPlayer.getPlaybackState();
+                if(!mCurrentPlayerState.isRepeating){
                     mPlayer.setRepeat(null, true);
                     mRepeatButton.setBackgroundColor(Color.RED);
                 }
                 else{
-                    isRepeatClicked=false;
                     mPlayer.setRepeat(null, false);
                     mRepeatButton.setBackgroundColor(Color.WHITE);
                 }
@@ -268,7 +263,6 @@ mPlayer.skipToPrevious(null);            }
                 Song trackToAdd = (Song) data.getExtras().get(SearchTrackActivity.TRACK);
                 boolean isAlreadyInList = false;
 
-                //todo need to check to see if song is already in tracklist, dont add it if it is
                 for(int i = 0; i <mTrackList.size(); i++){
                     if(mTrackList.get(i).songID.equals(trackToAdd.songID)){
                         isAlreadyInList = true;
