@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -18,6 +19,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +31,8 @@ import com.spotify.sdk.android.player.PlaybackState;
 import com.spotify.sdk.android.player.Spotify;
 import com.spotify.sdk.android.player.SpotifyPlayer;
 
+import org.w3c.dom.Text;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -39,6 +43,10 @@ import ip.partyplaylist.model.Party;
 import ip.partyplaylist.model.Song;
 import ip.partyplaylist.screen_actions.HostPlayerScreenActions;
 import ip.partyplaylist.util.SharedPreferenceHelper;
+
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
 
 
 
@@ -57,6 +65,7 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
     private Button mAddButton;
     private TextView songTitle;
     private TextView songArtist;
+    private TextView mPlaylistName;
     private ImageView albumCover;
     private ImageButton mSkipBackButton;
     private ImageButton mPlayButton;
@@ -64,8 +73,13 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
     private ImageButton mSkipForwardButton;
     private ImageButton mRepeatButton;
     private ImageButton mShuffleButton;
-    private ProgressBar mSongProgress;
-    private TextView mSongTime;
+
+    private ImageView mSwipeUpBarImage;
+    private TextView mSwipeUpBarTitle;
+    private TextView mSwipeUpBarDetail;
+    private ImageButton mSwipeUpBarButton;
+    private SlidingUpPanelLayout mSwipeUpPanel;
+
 
 
     @Override
@@ -75,6 +89,7 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
         mSharedPreferenceHelper = new SharedPreferenceHelper(this);
         mHostPlayerController = new HostPlayerController(this);
 
+        mPlaylistName = (TextView) findViewById(R.id.playlistName);
         mAddButton = (Button) findViewById(R.id.btnAddSong);
         songTitle = (TextView) findViewById(R.id.txtSongTitle);
         songArtist = (TextView) findViewById(R.id.txtSongArtist);
@@ -85,9 +100,11 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
         mSkipForwardButton= (ImageButton) findViewById(R.id.playerSkipForward);
         mRepeatButton= (ImageButton) findViewById(R.id.playerRepeatButton);
         mShuffleButton= (ImageButton) findViewById(R.id.playerShuffleButton);
-        mSongProgress = (ProgressBar) findViewById(R.id.playerSongProgress);
-        mSongTime = (TextView) findViewById(R.id.playerSongTime);
 
+        mSwipeUpPanel = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
+        mSwipeUpPanel.setPanelState(PanelState.HIDDEN);
+
+        mPlaylistName.setText(mSharedPreferenceHelper.getCurrentPlaylistName());
 
         songTitle.setVisibility(View.GONE);
         songArtist.setVisibility(View.GONE);
@@ -182,70 +199,72 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
             }
         });
 
-        mPlayButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mPlayButton.setClickable(false);
-                mPlayButton.setVisibility(View.GONE);
-                mPauseButton.setClickable(true);
-                mPauseButton.setVisibility(View.VISIBLE);
-                mPlayer.resume(null);
-            }
-        });
-
-        mPauseButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mPlayButton.setClickable(true);
-                mPlayButton.setVisibility(View.VISIBLE);
-                mPauseButton.setClickable(false);
-                mPauseButton.setVisibility(View.GONE);
-                mPlayer.pause(null);
-            }
-        });
-
-        mSkipBackButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-mPlayer.skipToPrevious(null);            }
-        });
-
-        mSkipForwardButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mPlayer.skipToNext(null);
-            }
-        });
-
-        mShuffleButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCurrentPlayerState = mPlayer.getPlaybackState();
-                if(!mCurrentPlayerState.isShuffling){
-                    mPlayer.setShuffle(null, true);
-                    mShuffleButton.setBackgroundColor(Color.RED);
-                }
-                else{
-                    mPlayer.setShuffle(null, false);
-                    mShuffleButton.setBackgroundColor(Color.WHITE);
-                }
-            }
-        });
-
-        mRepeatButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCurrentPlayerState = mPlayer.getPlaybackState();
-                if(!mCurrentPlayerState.isRepeating){
-                    mPlayer.setRepeat(null, true);
-                    mRepeatButton.setBackgroundColor(Color.RED);
-                }
-                else{
-                    mPlayer.setRepeat(null, false);
-                    mRepeatButton.setBackgroundColor(Color.WHITE);
-                }
-            }
-        });
+        //todo create separate methods for these, should not be in onCreate
+//
+//        mPlayButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mPlayButton.setClickable(false);
+//                mPlayButton.setVisibility(View.GONE);
+//                mPauseButton.setClickable(true);
+//                mPauseButton.setVisibility(View.VISIBLE);
+//                mPlayer.resume(null);
+//            }
+//        });
+//
+//        mPauseButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mPlayButton.setClickable(true);
+//                mPlayButton.setVisibility(View.VISIBLE);
+//                mPauseButton.setClickable(false);
+//                mPauseButton.setVisibility(View.GONE);
+//                mPlayer.pause(null);
+//            }
+//        });
+//
+//        mSkipBackButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//mPlayer.skipToPrevious(null);            }
+//        });
+//
+//        mSkipForwardButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mPlayer.skipToNext(null);
+//            }
+//        });
+//
+//        mShuffleButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mCurrentPlayerState = mPlayer.getPlaybackState();
+//                if(!mCurrentPlayerState.isShuffling){
+//                    mPlayer.setShuffle(null, true);
+//                    mShuffleButton.setBackgroundColor(Color.RED);
+//                }
+//                else{
+//                    mPlayer.setShuffle(null, false);
+//                    mShuffleButton.setBackgroundColor(Color.WHITE);
+//                }
+//            }
+//        });
+//
+//        mRepeatButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mCurrentPlayerState = mPlayer.getPlaybackState();
+//                if(!mCurrentPlayerState.isRepeating){
+//                    mPlayer.setRepeat(null, true);
+//                    mRepeatButton.setBackgroundColor(Color.RED);
+//                }
+//                else{
+//                    mPlayer.setRepeat(null, false);
+//                    mRepeatButton.setBackgroundColor(Color.WHITE);
+//                }
+//            }
+//        });
     }
 
 
@@ -296,8 +315,8 @@ mPlayer.skipToPrevious(null);            }
 
         mCurrentPlayerState = mPlayer.getPlaybackState();
         String time = String.valueOf(mCurrentPlayerState.positionMs);
-        mSongTime.setText(time);
-        mSongProgress.setProgress((int) mCurrentPlayerState.positionMs);
+//        mSongTime.setText(time);
+//        mSongProgress.setProgress((int) mCurrentPlayerState.positionMs);
         //add animation
 
         //todo show notification in the android notification bar
