@@ -1,14 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!--<com.sothree.slidinguppanel.SlidingUpPanelLayout-->
-    <!--xmlns:sothree="http://schemas.android.com/apk/res-auto"-->
-    <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--android:id="@+id/sliding_layout"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:gravity="bottom"-->
-    <!--sothree:umanoPanelHeight="68dp"-->
-    <!--sothree:umanoShadowHeight="4dp">-->
 
 <com.sothree.slidinguppanel.SlidingUpPanelLayout
     xmlns:sothree="http://schemas.android.com/apk/res-auto"
@@ -22,6 +13,7 @@
     sothree:umanoPanelHeight="50dp"
     sothree:umanoShadowHeight="4dp"
     sothree:umanoDragView="@+id/dragView">
+
 
     <!--MAIN VIEW-->
 
@@ -76,79 +68,6 @@
         android:id="@+id/musicPlayerLayout"
         android:clickable="true">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:id="@+id/playerButtons">
-
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@android:drawable/ic_dialog_alert"
-                android:id="@+id/playerShuffleButton"
-                android:layout_marginStart="30dp"
-                android:layout_marginLeft="30dp" />
-
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@android:drawable/ic_media_previous"
-                android:id="@+id/playerSkipBack" />
-
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@android:drawable/ic_media_play"
-                android:id="@+id/playerPlay" />
-
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@android:drawable/ic_media_pause"
-                android:id="@+id/playerPause" />
-
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@android:drawable/ic_media_next"
-                android:id="@+id/playerSkipForward" />
-
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@android:drawable/ic_menu_rotate"
-                android:id="@+id/playerRepeatButton" />
-
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/txtSongTitle"
-            android:text="Song title here"
-            android:textAlignment="viewStart"
-            android:textSize="18sp"
-            android:layout_marginTop="50dp"
-            android:layout_below="@+id/imgSongCover"
-            android:layout_centerHorizontal="true" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/txtSongArtist"
-            android:text="Artist Title here"
-            android:textStyle="normal|italic"
-            android:textAlignment="viewStart"
-            android:fontFamily="sans-serif"
-            android:layout_below="@+id/txtSongTitle"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="23dp" />
-
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -168,39 +87,135 @@
                 android:orientation="vertical"
                 android:gravity="center_vertical|center_horizontal"
                 android:layout_gravity="center"
+                android:layout_marginLeft="4dp"
                 android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true">
+                android:layout_toLeftOf="@+id/btnSwipeUpBar"
+                android:layout_toRightOf="@+id/swipeUpBarImage">
 
                 <TextView
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/txtSwipeUpBarTitle"
+                    android:gravity="center"
                     android:text="Song title here"
                     android:textAlignment="viewStart"
-                    android:textSize="20sp"/>
+                    android:ellipsize="marquee"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:maxLines="1"
+                    android:textSize="20sp"
+                    android:layout_width="wrap_content" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:gravity="center"
                     android:id="@+id/txtSwipeUpBarDetail"
                     android:text="Artist Title here"
                     android:textStyle="normal|italic"
                     android:textAlignment="viewStart"
+                    android:ellipsize="marquee"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:maxLines="1"
                     android:fontFamily="sans-serif"/>
 
             </LinearLayout>
 
             <ImageButton
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:id="@+id/btnSwipeUpBar"
                 android:gravity="end"
-                app:srcCompat="@android:drawable/ic_media_play"
-                android:layout_alignParentTop="true"
+                app:srcCompat="@android:drawable/ic_media_pause"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" />
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+                android:onClick="playerPlayAction"/>
 
         </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:id="@+id/playerButtons"
+            android:layout_alignParentBottom="true">
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@android:drawable/ic_dialog_alert"
+                android:id="@+id/playerShuffleButton"
+                android:onClick="playerShuffleAction"/>
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@android:drawable/ic_media_previous"
+                android:id="@+id/playerSkipBack"
+                android:onClick="playerSkipBackAction"/>
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@android:drawable/ic_media_pause"
+                android:id="@+id/playerPlay"
+                android:onClick="playerPlayAction"/>
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@android:drawable/ic_media_next"
+                android:id="@+id/playerSkipForward"
+                android:onClick="playerSkipForwardAction"/>
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@android:drawable/ic_menu_rotate"
+                android:id="@+id/playerRepeatButton"
+                android:onClick="playerRepeatAction"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtSongTitle"
+            android:text="Song title here"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:maxLines="1"
+            android:textSize="18sp"
+            android:layout_marginTop="50dp"
+            android:layout_marginLeft="4dp"
+            android:layout_below="@+id/imgSongCover"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtSongArtist"
+            android:text="Artist Title here"
+            android:textStyle="normal|italic"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:maxLines="1"
+            android:layout_marginLeft="4dp"
+            android:fontFamily="sans-serif"
+            android:layout_below="@+id/txtSongTitle"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp" />
 
 
         <SeekBar

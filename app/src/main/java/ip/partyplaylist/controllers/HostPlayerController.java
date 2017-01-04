@@ -120,9 +120,6 @@ public class HostPlayerController {
             }
         }
 
-//        for (Song track : currentParty.trackList) {
-//
-//        }
 
         mCurrentParty = currentParty;
 
