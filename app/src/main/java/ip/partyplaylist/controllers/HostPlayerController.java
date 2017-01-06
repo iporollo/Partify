@@ -87,21 +87,6 @@ public class HostPlayerController {
 
     }
 
-    public ArrayList<String> createSongStringArrayList() {
-
-        mSongListOfStrings = new ArrayList<>();
-
-        for (int i = 0; i < mTrackList.size(); i++) {
-
-            Song currentSong = mTrackList.get(i);
-
-            mSongListOfStrings.add(currentSong.songArtistName + " - " + currentSong.songName);
-        }
-
-        return mSongListOfStrings;
-
-    }
-
     public void updateCurrentSpotifyPlaylist(Party currentParty) {
 
         StringBuffer tracksParams = new StringBuffer();

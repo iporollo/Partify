@@ -14,7 +14,6 @@
     sothree:umanoShadowHeight="4dp"
     sothree:umanoDragView="@+id/dragView">
 
-
     <!--MAIN VIEW-->
 
     <RelativeLayout
@@ -59,6 +58,7 @@
             android:layout_alignParentStart="true" />
 
     </RelativeLayout>
+
 
     <!--PLAYER VIEW-->
 
@@ -224,6 +224,7 @@
             android:id="@+id/seekBar"
             style="@style/Widget.AppCompat.SeekBar"
             android:layout_above="@+id/playerButtons"
+            android:layout_marginBottom="20dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />
 
@@ -235,6 +236,17 @@
             android:layout_marginTop="46dp"
             android:layout_below="@+id/SwipeUpBarLayout"
             android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:text="0:00"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/playerTimeForward"
+            android:layout_above="@+id/seekBar"
+            android:layout_marginBottom="4dp"
+            android:layout_marginLeft="10dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
 
     </RelativeLayout>
 

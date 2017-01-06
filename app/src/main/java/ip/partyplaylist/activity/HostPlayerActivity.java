@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -21,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +31,7 @@ import com.spotify.sdk.android.player.Error;
 import com.spotify.sdk.android.player.Player;
 import com.spotify.sdk.android.player.PlayerEvent;
 import com.spotify.sdk.android.player.PlaybackState;
+import com.spotify.sdk.android.player.Metadata;
 import com.spotify.sdk.android.player.Spotify;
 import com.spotify.sdk.android.player.SpotifyPlayer;
 
@@ -39,6 +42,8 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import ip.partyplaylist.R;
+import ip.partyplaylist.adapter.PartifyTracksAdapter;
+import ip.partyplaylist.adapter.TracksAdapter;
 import ip.partyplaylist.controllers.HostPlayerController;
 import ip.partyplaylist.model.Party;
 import ip.partyplaylist.model.Song;
@@ -57,11 +62,14 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
 
     private Party mCurrentParty;
     private ArrayList<Song> mTrackList;
-    private ArrayList<String> mSongListOfStrings;
+    private ListView mTrackListView;
     private Player mPlayer;
     private PlaybackState mCurrentPlayerState;
+    private  Metadata mPlayerMetaData;
     private HostPlayerController mHostPlayerController;
     private SharedPreferenceHelper mSharedPreferenceHelper;
+    private PartifyTracksAdapter mPartifyTrackListAdapter;
+    private Handler mHandler = new Handler();
 
     private Button mAddButton;
     private TextView songTitle, songArtist, mPlaylistName;
@@ -71,8 +79,9 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
     private SlidingUpPanelLayout mSwipeUpPanel;
     private RelativeLayout mSwipeUpBar;
     private ImageView mSwipeUpBarImage;
-    private TextView mSwipeUpBarTitle, mSwipeUpBarDetail;
+    private TextView mSwipeUpBarTitle, mSwipeUpBarDetail, mPlayerTimeForward;
     private ImageButton mSwipeUpBarButton;
+    private SeekBar mSeekBar;
 
 
     @Override
@@ -80,9 +89,13 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_host_player);
 
+        mHandler.postDelayed(run,1000);
+
         //intialize vars
         mSharedPreferenceHelper = new SharedPreferenceHelper(this);
         mHostPlayerController = new HostPlayerController(this);
+
+        mTrackListView=(ListView)findViewById(R.id.lstviewTracks);
 
         mPlaylistName = (TextView) findViewById(R.id.playlistName);
         mAddButton = (Button) findViewById(R.id.btnAddSong);
@@ -100,6 +113,8 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
         mSwipeUpBarTitle = (TextView) findViewById(R.id.txtSwipeUpBarTitle);
         mSwipeUpBarDetail = (TextView) findViewById(R.id.txtSwipeUpBarDetail);
         mSwipeUpBar = (RelativeLayout) findViewById(R.id.SwipeUpBarLayout);
+        mSeekBar = (SeekBar) findViewById(R.id.seekBar);
+        mPlayerTimeForward = (TextView) findViewById(R.id.playerTimeForward);
 
 
         //hide the swipe up bar at first
@@ -135,21 +150,13 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
         //populates arraylist of Song objects
         mTrackList = mHostPlayerController.createSongModelArrayList();
 
-        //populates arraylist of string objects (song name and artist)
-        mSongListOfStrings = mHostPlayerController.createSongStringArrayList();
-
         //creates Party object with the current tracklist
         mCurrentParty = mHostPlayerController.getInitialParty(mTrackList);
 
-        // Get the reference of ListViewAnimals
-        final ListView lstviewTracksGUI=(ListView)findViewById(R.id.lstviewTracks);
+        mPartifyTrackListAdapter = new PartifyTracksAdapter(mTrackList, this);
+        mTrackListView.setAdapter(mPartifyTrackListAdapter);
 
-        // Create The Adapter with passing ArrayList as 3rd parameter
-        ArrayAdapter<String> arrayAdapter =
-                new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, mSongListOfStrings);
-        // Set The Adapter
-        lstviewTracksGUI.setAdapter(arrayAdapter);
-        lstviewTracksGUI.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mTrackListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position,
                                     long id) {
@@ -190,8 +197,6 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
                 }
 
                 //todo add a sound icon to the song that is playing
-
-
             }
         });
     }
@@ -284,7 +289,7 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
 
                 if(!isAlreadyInList){
                     mTrackList.add(trackToAdd);
-                    mSongListOfStrings.add(trackToAdd.songArtistName + " - " + trackToAdd.songName);
+                    //mSongListOfStrings.add(trackToAdd.songArtistName + " - " + trackToAdd.songName);
 
                     mHostPlayerController.updateCurrentSpotifyPlaylist(mCurrentParty);
                     mPlayer.queue(null,trackToAdd.songID);
@@ -297,6 +302,54 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
         }
     }
 
+    //seekbar update
+    private final Runnable run = new Runnable() {
+
+        @Override
+        public void run() {
+            if(mPlayer != null){
+                mCurrentPlayerState = mPlayer.getPlaybackState();
+                if(mCurrentPlayerState.isPlaying){
+                    mPlayerMetaData = mPlayer.getMetadata();
+
+                    long mCurrentPosition = mCurrentPlayerState.positionMs / 1000;
+                    mSeekBar.setMax((int) (mPlayerMetaData.currentTrack.durationMs / 1000));
+                    mSeekBar.setProgress((int) mCurrentPosition);
+
+                    int seconds = (int) (mCurrentPlayerState.positionMs / 1000) % 60 ;
+                    int minutes = (int) ((mCurrentPlayerState.positionMs / (1000*60)) % 60);
+                    mPlayerTimeForward.setText(String.format("%d:%02d",minutes,seconds));
+
+                    Log.d("HostPlayerActivity", "handler");
+                }
+            }
+            mHandler.postDelayed(this, 1000);
+
+
+            mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                }
+
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    if(mPlayer != null && fromUser){
+                        mPlayer.seekToPosition(null, progress * 1000);
+
+                        int seconds = (int) (mCurrentPlayerState.positionMs / 1000) % 60 ;
+                        int minutes = (int) ((mCurrentPlayerState.positionMs / (1000*60)) % 60);
+                        mPlayerTimeForward.setText(String.format("%d:%02d",minutes,seconds));
+                    }
+                }
+            });
+        }
+
+    };
 
     //Player methods
     @Override
@@ -308,9 +361,8 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
     public void onPlaybackEvent(PlayerEvent event) {
         Log.d("HostPlayerActivity", "playback event logging right here");
 
-        mCurrentPlayerState = mPlayer.getPlaybackState();
-        String time = String.valueOf(mCurrentPlayerState.positionMs);
-//        mSongTime.setText(time);
+
+//        mSongTime.setText(String.format("%d:%02d", minutes,seconds);
 //        mSongProgress.setProgress((int) mCurrentPlayerState.positionMs);
         //add animation
 
@@ -324,7 +376,5 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
         Spotify.destroyPlayer(this);
         super.onDestroy();
     }
-
-
 
 }
