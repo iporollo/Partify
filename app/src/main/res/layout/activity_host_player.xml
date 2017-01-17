@@ -47,13 +47,21 @@
                 android:id="@+id/btnAddSong" />
         </LinearLayout>
 
+        <Button
+            android:text="Start Party"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/topPanelMainView"
+            android:gravity="center"
+            android:id="@+id/btnStartParty"
+            android:onClick="startParty"/>
 
         <ListView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:elevation="0dp"
+            android:layout_alignParentBottom="true"
             android:id="@+id/lstviewTracks"
-            android:layout_below="@+id/topPanelMainView"
+            android:layout_below="@+id/btnStartParty"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />
 
@@ -147,12 +155,12 @@
             android:id="@+id/playerButtons"
             android:layout_alignParentBottom="true">
 
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@android:drawable/ic_dialog_alert"
-                android:id="@+id/playerShuffleButton"
-                android:onClick="playerShuffleAction"/>
+            <!--<ImageButton-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--app:srcCompat="@android:drawable/ic_dialog_alert"-->
+                <!--android:id="@+id/playerShuffleButton"-->
+                <!--android:onClick="playerShuffleAction"/>-->
 
             <ImageButton
                 android:layout_width="wrap_content"
@@ -175,12 +183,12 @@
                 android:id="@+id/playerSkipForward"
                 android:onClick="playerSkipForwardAction"/>
 
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@android:drawable/ic_menu_rotate"
-                android:id="@+id/playerRepeatButton"
-                android:onClick="playerRepeatAction"/>
+            <!--<ImageButton-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--app:srcCompat="@android:drawable/ic_menu_rotate"-->
+                <!--android:id="@+id/playerRepeatButton"-->
+                <!--android:onClick="playerRepeatAction"/>-->
 
         </LinearLayout>
 

@@ -68,9 +68,6 @@ public class LoginActivity extends AppCompatActivity implements
     protected void onResume() {
         super.onResume();
 
-//        mHostButton.setVisibility(View.VISIBLE);
-//        mJoinButton.setVisibility(View.VISIBLE);
-
         mLoginActivityController.onCheckIfUserIsLoggedIn();
     }
 

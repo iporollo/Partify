@@ -99,18 +99,32 @@ public class CreatePartyActivity extends AppCompatActivity implements
             if (resultCode == RESULT_OK) {
 
                 Song trackToAdd = (Song) data.getExtras().get(SearchTrackActivity.TRACK);
-                mCurrentTrackList.add(trackToAdd);
-//                mTracksAdapter = new PartifyTracksAdapter(mCurrentTrackList, CreatePartyActivity.this);
-//                mPartyTrackList.setAdapter(mTracksAdapter);
-//                mPartyTrackList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//                    @Override
-//                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                        mCurrentTrackList.remove(position);
-//                        mTracksAdapter = new PartifyTracksAdapter(mCurrentTrackList, CreatePartyActivity.this);
-//                        mPartyTrackList.setAdapter(mTracksAdapter);
-//                    }
-//
-//                });
+
+                boolean isAlreadyInList = false;
+
+                for(int i = 0; i <mCurrentTrackList.size(); i++){
+                    if(mCurrentTrackList.get(i).songID.equals(trackToAdd.songID)){
+                        isAlreadyInList = true;
+                    }
+                }
+                if(!isAlreadyInList) {
+                    mCurrentTrackList.add(trackToAdd);
+                }
+                else{
+                    Toast.makeText(this, "Already in playlist!", Toast.LENGTH_SHORT).show();
+                }
+                mTracksAdapter = new PartifyTracksAdapter(mCurrentTrackList, CreatePartyActivity.this);
+                mPartyTrackList.setAdapter(mTracksAdapter);
+                mPartyTrackList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        mCurrentTrackList.remove(position);
+                        mTracksAdapter = new PartifyTracksAdapter(mCurrentTrackList, CreatePartyActivity.this);
+                        mPartyTrackList.setAdapter(mTracksAdapter);
+                        //todo swipe left to delete instead of click
+                    }
+
+                });
 
             }
         }

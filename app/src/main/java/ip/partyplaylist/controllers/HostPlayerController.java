@@ -3,6 +3,8 @@ package ip.partyplaylist.controllers;
 import android.content.Context;
 import android.util.Log;
 
+import com.spotify.sdk.android.player.Player;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -132,6 +134,7 @@ public class HostPlayerController {
                 });
 
     }
+
 
     public void updateCurrentFirebaseParty(Party currentParty) {
         //todo firebase update of party

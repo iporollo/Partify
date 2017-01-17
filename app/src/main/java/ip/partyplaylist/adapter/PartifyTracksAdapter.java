@@ -20,6 +20,7 @@ public class PartifyTracksAdapter extends BaseAdapter {
     private final Context mContext;
     private boolean mIsCurrentPartyOwnedByCurrentUser;
     private List<Song> mTracks;
+//    private Player mPlayer;
 
     public PartifyTracksAdapter(List<Song> tracks, Context context,
                                 boolean isCurrentPartyOwnedByCurrentUser) {
@@ -32,6 +33,12 @@ public class PartifyTracksAdapter extends BaseAdapter {
         mContext = context;
         mTracks = tracks;
     }
+
+//    public PartifyTracksAdapter(List<Song> tracks, Context context, Player player) {
+//        mContext = context;
+//        mTracks = tracks;
+//        mPlayer = player;
+//    }
 
     @Override
     public int getCount() {
@@ -59,7 +66,7 @@ public class PartifyTracksAdapter extends BaseAdapter {
             viewHolder = new ViewHolderItem();
             viewHolder.trackNameTV = (TextView) convertView.findViewById(R.id.track_name);
             viewHolder.trackArtistTV = (TextView) convertView.findViewById(R.id.track_artist);
-            viewHolder.addTrackIcon = (ImageView) convertView.findViewById(R.id.add_track_icon);
+            viewHolder.addTrackIcon = (ImageView) convertView.findViewById(R.id.currentTrackPlayingIcon);
 
             convertView.setTag(viewHolder);
 
@@ -72,15 +79,21 @@ public class PartifyTracksAdapter extends BaseAdapter {
 
         if(track != null) {
             viewHolder.trackNameTV.setText(track.songName);
-            viewHolder.trackArtistTV.setText("(" + track.songArtistName + ")");
+            viewHolder.trackArtistTV.setText(track.songArtistName);
+
+//            if (mPlayer != null && mPlayer.getPlaybackState().isPlaying && mPlayer.getMetadata().currentTrack.uri.equals(track.songID)) {
+//                viewHolder.addTrackIcon.setVisibility(View.VISIBLE);
+//                viewHolder.addTrackIcon.setImageResource(android.R.drawable.ic_media_play);
+//            }
+//            else{
+//                viewHolder.addTrackIcon.setVisibility(View.GONE);
+//            }
         }
 
-        viewHolder.addTrackIcon.setVisibility(mIsCurrentPartyOwnedByCurrentUser ?
-                View.VISIBLE :
-                View.GONE);
 
         return convertView;
     }
+
 
     static class ViewHolderItem {
         TextView trackNameTV;
