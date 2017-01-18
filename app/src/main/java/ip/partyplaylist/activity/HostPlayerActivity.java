@@ -358,8 +358,6 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
 
     };
 
-
-
     //Player methods
     @Override
     public void onPlaybackError(Error error) {
@@ -376,13 +374,19 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
         Log.i("hostplayeractivity", "Player state: " + mCurrentPlayerState);
         Log.i("hostplayeractivity", "Metadata: " + mPlayerMetaData);
 
-        if(event.equals(PlayerEvent.kSpPlaybackNotifyTrackChanged)){
+        if(event.equals(PlayerEvent.kSpPlaybackNotifyPlay)){
             if(!queueFlag){
 
                 for(Song song : mTrackList){
                     String tempSongID = song.songID;
-                    Log.i("hostplayeractivity",tempSongID);
-                    mPlayer.queue(mOperationCallback, tempSongID);
+                    if(!tempSongID.equals(mPlayerMetaData.currentTrack.uri)){
+                        Log.i("hostplayeractivity",tempSongID);
+                        try
+                        {Thread.sleep(100);}
+                        catch (Exception e)
+                        {e.printStackTrace();}
+                        mPlayer.queue(mOperationCallback, tempSongID);
+                    }
                 }
 
                 queueFlag = true;
