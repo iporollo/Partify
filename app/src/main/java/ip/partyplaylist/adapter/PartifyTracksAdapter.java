@@ -9,7 +9,10 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import ip.partyplaylist.R;
 import ip.partyplaylist.model.Song;
@@ -20,7 +23,7 @@ public class PartifyTracksAdapter extends BaseAdapter {
     private final Context mContext;
     private boolean mIsCurrentPartyOwnedByCurrentUser;
     private List<Song> mTracks;
-//    private Player mPlayer;
+    private Map<Song, Boolean> mTrackMap;
 
     public PartifyTracksAdapter(List<Song> tracks, Context context,
                                 boolean isCurrentPartyOwnedByCurrentUser) {
@@ -34,11 +37,13 @@ public class PartifyTracksAdapter extends BaseAdapter {
         mTracks = tracks;
     }
 
-//    public PartifyTracksAdapter(List<Song> tracks, Context context, Player player) {
-//        mContext = context;
-//        mTracks = tracks;
-//        mPlayer = player;
-//    }
+    public PartifyTracksAdapter(Map<Song,Boolean> tracksMap, List<Song> tracksList, Context context) {
+        mContext = context;
+        mTrackMap = tracksMap;
+        mTracks = tracksList;
+
+    }
+
 
     @Override
     public int getCount() {
@@ -81,15 +86,18 @@ public class PartifyTracksAdapter extends BaseAdapter {
             viewHolder.trackNameTV.setText(track.songName);
             viewHolder.trackArtistTV.setText(track.songArtistName);
 
-//            if (mPlayer != null && mPlayer.getPlaybackState().isPlaying && mPlayer.getMetadata().currentTrack.uri.equals(track.songID)) {
-//                viewHolder.addTrackIcon.setVisibility(View.VISIBLE);
-//                viewHolder.addTrackIcon.setImageResource(android.R.drawable.ic_media_play);
+//            if(mTrackMap != null) {
+//                for (Map.Entry<Song, Boolean> currentEntry : mTrackMap.entrySet()) {
+//                    if (currentEntry.getValue()) {
+//                        viewHolder.addTrackIcon.setVisibility(View.VISIBLE);
+//                        viewHolder.addTrackIcon.setImageResource(android.R.drawable.ic_media_play);
+//                    } else {
+//                        viewHolder.addTrackIcon.setVisibility(View.GONE);
+//                    }
+//                }
 //            }
-//            else{
-//                viewHolder.addTrackIcon.setVisibility(View.GONE);
-//            }
-        }
 
+        }
 
         return convertView;
     }
