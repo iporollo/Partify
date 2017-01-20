@@ -16,9 +16,7 @@ import ip.partyplaylist.model.Party;
 import ip.partyplaylist.screen_actions.SearchPartyScreenActions;
 import ip.partyplaylist.util.SharedPreferenceHelper;
 
-/**
- * Created by az on 22/05/16.
- */
+
 public class SearchPartyController {
 
     private static final String TAG = SearchPartyController.class.getSimpleName();

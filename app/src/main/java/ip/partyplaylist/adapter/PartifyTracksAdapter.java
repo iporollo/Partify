@@ -9,31 +9,41 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import ip.partyplaylist.R;
-import ip.partyplaylist.model.PartifyTrack;
+import ip.partyplaylist.model.Song;
 
-/**
- * Created by az on 22/05/16.
- */
+
 public class PartifyTracksAdapter extends BaseAdapter {
 
     private final Context mContext;
     private boolean mIsCurrentPartyOwnedByCurrentUser;
-    private List<PartifyTrack> mTracks;
+    private List<Song> mTracks;
+    private Map<Song, Boolean> mTrackMap;
 
-    public PartifyTracksAdapter(List<PartifyTrack> tracks, Context context,
+    public PartifyTracksAdapter(List<Song> tracks, Context context,
                                 boolean isCurrentPartyOwnedByCurrentUser) {
         mContext = context;
         mTracks = tracks;
         mIsCurrentPartyOwnedByCurrentUser = isCurrentPartyOwnedByCurrentUser;
     }
 
-    public PartifyTracksAdapter(List<PartifyTrack> tracks, Context context) {
+    public PartifyTracksAdapter(List<Song> tracks, Context context) {
         mContext = context;
         mTracks = tracks;
     }
+
+    public PartifyTracksAdapter(Map<Song,Boolean> tracksMap, List<Song> tracksList, Context context) {
+        mContext = context;
+        mTrackMap = tracksMap;
+        mTracks = tracksList;
+
+    }
+
 
     @Override
     public int getCount() {
@@ -41,7 +51,7 @@ public class PartifyTracksAdapter extends BaseAdapter {
     }
 
     @Override
-    public PartifyTrack getItem(int position) {
+    public Song getItem(int position) {
         return mTracks.get(position);
     }
 
@@ -61,7 +71,7 @@ public class PartifyTracksAdapter extends BaseAdapter {
             viewHolder = new ViewHolderItem();
             viewHolder.trackNameTV = (TextView) convertView.findViewById(R.id.track_name);
             viewHolder.trackArtistTV = (TextView) convertView.findViewById(R.id.track_artist);
-            viewHolder.addTrackIcon = (ImageView) convertView.findViewById(R.id.add_track_icon);
+            viewHolder.addTrackIcon = (ImageView) convertView.findViewById(R.id.currentTrackPlayingIcon);
 
             convertView.setTag(viewHolder);
 
@@ -70,19 +80,28 @@ public class PartifyTracksAdapter extends BaseAdapter {
             viewHolder = (ViewHolderItem) convertView.getTag();
         }
 
-        PartifyTrack track = mTracks.get(position);
+        Song track = mTracks.get(position);
 
         if(track != null) {
-            viewHolder.trackNameTV.setText(track.mName);
-            viewHolder.trackArtistTV.setText("(" + track.mArtistName + ")");
-        }
+            viewHolder.trackNameTV.setText(track.songName);
+            viewHolder.trackArtistTV.setText(track.songArtistName);
 
-        viewHolder.addTrackIcon.setVisibility(mIsCurrentPartyOwnedByCurrentUser ?
-                View.VISIBLE :
-                View.GONE);
+//            if(mTrackMap != null) {
+//                for (Map.Entry<Song, Boolean> currentEntry : mTrackMap.entrySet()) {
+//                    if (currentEntry.getValue()) {
+//                        viewHolder.addTrackIcon.setVisibility(View.VISIBLE);
+//                        viewHolder.addTrackIcon.setImageResource(android.R.drawable.ic_media_play);
+//                    } else {
+//                        viewHolder.addTrackIcon.setVisibility(View.GONE);
+//                    }
+//                }
+//            }
+
+        }
 
         return convertView;
     }
+
 
     static class ViewHolderItem {
         TextView trackNameTV;

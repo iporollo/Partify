@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import ip.partyplaylist.R;
 import ip.partyplaylist.adapter.PartifyTracksAdapter;
 import ip.partyplaylist.controllers.CreatePartyController;
-import ip.partyplaylist.model.PartifyTrack;
+import ip.partyplaylist.model.Song;
 import ip.partyplaylist.screen_actions.CreatePartyScreenActions;
 
 public class CreatePartyActivity extends AppCompatActivity implements
@@ -27,7 +27,7 @@ public class CreatePartyActivity extends AppCompatActivity implements
     private EditText mPartyNameEditText;
     private ListView mPartyTrackList;
     private PartifyTracksAdapter mTracksAdapter;
-    private ArrayList<PartifyTrack> mCurrentTrackList = new ArrayList<>();
+    private ArrayList<Song> mCurrentTrackList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,13 +39,14 @@ public class CreatePartyActivity extends AppCompatActivity implements
         mTracksAdapter = new PartifyTracksAdapter(mCurrentTrackList, this);
 
         mPartyNameEditText = (EditText)  findViewById(R.id.party_name_edit_text);
-        mPartyTrackList = (ListView) findViewById(R.id.party_track_list);
+        mPartyTrackList = (ListView) findViewById(R.id.party_track_list); //playlist view main -- maybe needs changing
 
         Button mCreatePartyButton = (Button) findViewById(R.id.create_party);
         mCreatePartyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mCreatePartyController.onSaveParty(mPartyNameEditText.getText().toString(), mCurrentTrackList);
+                //here we need to save to firebase with unique party code number
             }
         });
 
@@ -79,8 +80,9 @@ public class CreatePartyActivity extends AppCompatActivity implements
 
     @Override
     public void showPartyCreatedScreen() {
+        ///show unique code number
         Toast.makeText(this, "Party Created!", Toast.LENGTH_SHORT).show();
-        Intent i = new Intent(CreatePartyActivity.this, PlaylistPlayerActivity.class);
+        Intent i = new Intent(CreatePartyActivity.this, HostPlayerActivity.class);
         startActivity(i);
     }
 
@@ -96,8 +98,21 @@ public class CreatePartyActivity extends AppCompatActivity implements
         if (requestCode == SEARCH_SONG_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
 
-                PartifyTrack trackToAdd = (PartifyTrack) data.getExtras().get(SearchTrackActivity.TRACK);
-                mCurrentTrackList.add(trackToAdd);
+                Song trackToAdd = (Song) data.getExtras().get(SearchTrackActivity.TRACK);
+
+                boolean isAlreadyInList = false;
+
+                for(int i = 0; i <mCurrentTrackList.size(); i++){
+                    if(mCurrentTrackList.get(i).songID.equals(trackToAdd.songID)){
+                        isAlreadyInList = true;
+                    }
+                }
+                if(!isAlreadyInList) {
+                    mCurrentTrackList.add(trackToAdd);
+                }
+                else{
+                    Toast.makeText(this, "Already in playlist!", Toast.LENGTH_SHORT).show();
+                }
                 mTracksAdapter = new PartifyTracksAdapter(mCurrentTrackList, CreatePartyActivity.this);
                 mPartyTrackList.setAdapter(mTracksAdapter);
                 mPartyTrackList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -106,6 +121,7 @@ public class CreatePartyActivity extends AppCompatActivity implements
                         mCurrentTrackList.remove(position);
                         mTracksAdapter = new PartifyTracksAdapter(mCurrentTrackList, CreatePartyActivity.this);
                         mPartyTrackList.setAdapter(mTracksAdapter);
+                        //todo swipe left to delete instead of click
                     }
 
                 });

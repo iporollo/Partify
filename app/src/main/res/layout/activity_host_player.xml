@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<com.sothree.slidinguppanel.SlidingUpPanelLayout
+    xmlns:sothree="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/sliding_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="bottom"
+    sothree:umanoPanelHeight="50dp"
+    sothree:umanoShadowHeight="4dp"
+    sothree:umanoDragView="@+id/dragView">
+
+    <!--MAIN VIEW-->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/songLayout">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical|center_horizontal"
+            android:id="@+id/topPanelMainView">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/playlistName"
+                android:text="Playlist name here"
+                android:layout_marginLeft="11dp"
+                android:layout_marginStart="11dp"
+                android:gravity="left"
+                android:layout_weight="1"
+                android:textSize="20sp" />
+
+            <Button
+                android:text="Add Song"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:id="@+id/btnAddSong" />
+        </LinearLayout>
+
+        <Button
+            android:text="Start Party"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/topPanelMainView"
+            android:gravity="center"
+            android:id="@+id/btnStartParty"
+            android:onClick="startParty"/>
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:id="@+id/lstviewTracks"
+            android:layout_below="@+id/btnStartParty"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+    </RelativeLayout>
+
+
+    <!--PLAYER VIEW-->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/musicPlayerLayout"
+        android:clickable="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:id="@+id/SwipeUpBarLayout">
+
+            <ImageView
+                android:adjustViewBounds="false"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:gravity="start"
+                android:id="@+id/swipeUpBarImage" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:orientation="vertical"
+                android:gravity="center_vertical|center_horizontal"
+                android:layout_gravity="center"
+                android:layout_marginLeft="4dp"
+                android:layout_alignParentTop="true"
+                android:layout_toLeftOf="@+id/btnSwipeUpBar"
+                android:layout_toRightOf="@+id/swipeUpBarImage">
+
+                <TextView
+                    android:layout_height="wrap_content"
+                    android:id="@+id/txtSwipeUpBarTitle"
+                    android:gravity="center"
+                    android:text="Song title here"
+                    android:textAlignment="viewStart"
+                    android:ellipsize="marquee"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:maxLines="1"
+                    android:textSize="20sp"
+                    android:layout_width="wrap_content" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:id="@+id/txtSwipeUpBarDetail"
+                    android:text="Artist Title here"
+                    android:textStyle="normal|italic"
+                    android:textAlignment="viewStart"
+                    android:ellipsize="marquee"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:maxLines="1"
+                    android:fontFamily="sans-serif"/>
+
+            </LinearLayout>
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:id="@+id/btnSwipeUpBar"
+                android:gravity="end"
+                app:srcCompat="@android:drawable/ic_media_pause"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+                android:onClick="playerPlayAction"/>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:id="@+id/playerButtons"
+            android:layout_alignParentBottom="true">
+
+            <!--<ImageButton-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--app:srcCompat="@android:drawable/ic_dialog_alert"-->
+                <!--android:id="@+id/playerShuffleButton"-->
+                <!--android:onClick="playerShuffleAction"/>-->
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@android:drawable/ic_media_previous"
+                android:id="@+id/playerSkipBack"
+                android:onClick="playerSkipBackAction"/>
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@android:drawable/ic_media_pause"
+                android:id="@+id/playerPlay"
+                android:onClick="playerPlayAction"/>
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@android:drawable/ic_media_next"
+                android:id="@+id/playerSkipForward"
+                android:onClick="playerSkipForwardAction"/>
+
+            <!--<ImageButton-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--app:srcCompat="@android:drawable/ic_menu_rotate"-->
+                <!--android:id="@+id/playerRepeatButton"-->
+                <!--android:onClick="playerRepeatAction"/>-->
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtSongTitle"
+            android:text="Song title here"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:maxLines="1"
+            android:textSize="18sp"
+            android:layout_marginTop="50dp"
+            android:layout_marginLeft="4dp"
+            android:layout_below="@+id/imgSongCover"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtSongArtist"
+            android:text="Artist Title here"
+            android:textStyle="normal|italic"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:maxLines="1"
+            android:layout_marginLeft="4dp"
+            android:fontFamily="sans-serif"
+            android:layout_below="@+id/txtSongTitle"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp" />
+
+
+        <SeekBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/seekBar"
+            style="@style/Widget.AppCompat.SeekBar"
+            android:layout_above="@+id/playerButtons"
+            android:layout_marginBottom="20dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <ImageView
+            android:id="@+id/imgSongCover"
+            android:adjustViewBounds="false"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="46dp"
+            android:layout_below="@+id/SwipeUpBarLayout"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:text="0:00"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/playerTimeForward"
+            android:layout_above="@+id/seekBar"
+            android:layout_marginBottom="4dp"
+            android:layout_marginLeft="10dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+    </RelativeLayout>
+
+
+</com.sothree.slidinguppanel.SlidingUpPanelLayout>
+
+

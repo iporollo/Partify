@@ -32,7 +32,7 @@
             android:theme="@style/SplashTheme"
             android:windowSoftInputMode="adjustPan|stateVisible"/>
 
-        <activity android:name=".activity.PlaylistPlayerActivity">
+        <activity android:name=".activity.HostPlayerActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

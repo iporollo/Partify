@@ -11,6 +11,7 @@ public class SharedPreferenceHelper {
     public static final String CURRENT_SPOTIFY_TOKEN_KEY = "CurrentSpotifyToken";
     public static final String CURRENT_USER_SPOTIFY_ID_KEY = "CurrentSpotifyID";
     public static final String CURRENT_PLAYLIST_ID_KEY = "CurrentPlaylistID";
+    public static final String CURRENT_PLAYLIST_NAME = "CurrentPlaylistName";
 
     private Context mContext;
     private SharedPreferences mSharedPreferences;
@@ -32,6 +33,12 @@ public class SharedPreferenceHelper {
         editor.apply();
     }
 
+    public void saveCurrentPlayListName(String name) {
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putString(CURRENT_PLAYLIST_NAME, name);
+        editor.apply();
+    }
+
     public void saveCurrentPlayListId(String id) {
         SharedPreferences.Editor editor = mSharedPreferences.edit();
         editor.putString(CURRENT_PLAYLIST_ID_KEY, id);
@@ -49,5 +56,10 @@ public class SharedPreferenceHelper {
     public String getCurrentPlaylistId() {
         return mSharedPreferences.getString(CURRENT_PLAYLIST_ID_KEY, "");
     }
+
+    public String getCurrentPlaylistName() {
+        return mSharedPreferences.getString(CURRENT_PLAYLIST_NAME, "");
+    }
+
 
 }

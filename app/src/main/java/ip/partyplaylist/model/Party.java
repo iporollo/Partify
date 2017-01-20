@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class Party implements Serializable {
 
     public String name;
-    public ArrayList<PartifyTrack> trackList;
+    public ArrayList<Song> trackList;
     public String playlistId;
     public String hostId;
 
@@ -20,12 +20,12 @@ public class Party implements Serializable {
 
     }
 
-    public Party(String name, ArrayList<PartifyTrack> trackList) {
+    public Party(String name, ArrayList<Song> trackList) {
         this.name = name;
         this.trackList = trackList;
     }
 
-    public void addTrack(PartifyTrack trackToAdd) {
+    public void addTrack(Song trackToAdd) {
         trackList.add(trackToAdd);
     }
 

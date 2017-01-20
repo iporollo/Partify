@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import ip.partyplaylist.R;
 import ip.partyplaylist.adapter.PartiesAdapter;
 import ip.partyplaylist.controllers.SearchPartyController;
-import ip.partyplaylist.model.PartifyTrack;
+import ip.partyplaylist.model.Song;
 import ip.partyplaylist.model.Party;
 import ip.partyplaylist.screen_actions.SearchPartyScreenActions;
 
@@ -44,7 +44,7 @@ public class SearchPartyActivity extends AppCompatActivity implements
                 Party selectedParty = (Party) mPartiesListView.getItemAtPosition(position);
 
                 if(selectedParty.trackList == null) {
-                    selectedParty.trackList = new ArrayList<PartifyTrack>();
+                    selectedParty.trackList = new ArrayList<Song>();
                 }
 
                 Intent startPartyDetailsScreen = new Intent(SearchPartyActivity.this,

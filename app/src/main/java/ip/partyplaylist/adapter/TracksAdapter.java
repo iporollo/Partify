@@ -13,9 +13,10 @@ import java.util.List;
 import ip.partyplaylist.R;
 import kaaes.spotify.webapi.android.models.Track;
 
-/**
- * Created by az on 22/05/16.
- */
+//tracks adapter sets up the view of the song, artist on the track list item layout
+//this is not exactly what I want, therefore I am leaving it untouched for now
+//possibly use same kind of adapter in the future for HostPlayerActivity or just delete it
+
 public class TracksAdapter extends BaseAdapter {
 
     private final Context mContext;

@@ -17,7 +17,7 @@ import java.util.List;
 import ip.partyplaylist.R;
 import ip.partyplaylist.adapter.TracksAdapter;
 import ip.partyplaylist.controllers.SearchTrackController;
-import ip.partyplaylist.model.PartifyTrack;
+import ip.partyplaylist.model.Song;
 import ip.partyplaylist.screen_actions.SearchTrackScreenActions;
 import kaaes.spotify.webapi.android.models.Track;
 
@@ -65,13 +65,14 @@ public class SearchTrackActivity extends AppCompatActivity implements SearchTrac
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Track selectedTrack = (Track) mTrackList.getItemAtPosition(position);
 
-                PartifyTrack partifyTrack = new PartifyTrack(
+                Song song = new Song(
                         selectedTrack.name,
                         selectedTrack.artists.get(0).name,
-                        "spotify:track:" + selectedTrack.id);
+                        "spotify:track:" + selectedTrack.id,
+                        selectedTrack.album.images.get(0).url);
 
                 Intent resultData = new Intent();
-                resultData.putExtra(TRACK, partifyTrack);
+                resultData.putExtra(TRACK, song);
                 setResult(Activity.RESULT_OK, resultData);
                 finish();
             }
