@@ -1,20 +1,15 @@
 package ip.partyplaylist.activity;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Picture;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.text.BoringLayout;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,7 +22,6 @@ import com.spotify.sdk.android.player.PlaybackState;
 import com.spotify.sdk.android.player.Metadata;
 import com.spotify.sdk.android.player.Spotify;
 import com.spotify.sdk.android.player.SpotifyPlayer;
-
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -59,10 +53,6 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
     private Metadata mPlayerMetaData;
     private HostPlayerController mHostPlayerController;
     private SharedPreferenceHelper mSharedPreferenceHelper;
-    private PartifyTracksAdapter mPartifyTrackListAdapter;
-    private Handler mHandler = new Handler();
-    private Map<Song, Boolean> mTrackMap = new HashMap<>();
-
 
     private Button mAddButton, mStartParty;
     private TextView songTitle, songArtist, mPlaylistName;
@@ -70,14 +60,14 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
     private ImageButton mPlayButton;
 
     private SlidingUpPanelLayout mSwipeUpPanel;
-    private RelativeLayout mSwipeUpBar;
     private ImageView mSwipeUpBarImage;
     private TextView mSwipeUpBarTitle, mSwipeUpBarDetail, mPlayerTimeForward;
     private ImageButton mSwipeUpBarButton;
     private SeekBar mSeekBar;
 
-    private ImageView mCurrentTrackPlayingIcon;
-
+    private PartifyTracksAdapter mPartifyTrackListAdapter;
+    private Handler mHandler = new Handler();
+    private Map<Song, Boolean> mTrackMap = new HashMap<>();
     private boolean queueFlag = false;
 
     private final Player.OperationCallback mOperationCallback = new Player.OperationCallback() {
@@ -91,9 +81,6 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
             Log.i("HostPlayerActivity","ERROR:" + error);
         }
     };
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,7 +106,6 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
         mSwipeUpBarImage = (ImageView) findViewById(R.id.swipeUpBarImage);
         mSwipeUpBarTitle = (TextView) findViewById(R.id.txtSwipeUpBarTitle);
         mSwipeUpBarDetail = (TextView) findViewById(R.id.txtSwipeUpBarDetail);
-        mSwipeUpBar = (RelativeLayout) findViewById(R.id.SwipeUpBarLayout);
         mSeekBar = (SeekBar) findViewById(R.id.seekBar);
         mPlayerTimeForward = (TextView) findViewById(R.id.playerTimeForward);
 
@@ -145,7 +131,6 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
             public void onInitialized(SpotifyPlayer spotifyPlayer) {
                 mPlayer = spotifyPlayer;
                 mPlayer.addNotificationCallback(HostPlayerActivity.this);
-
             }
 
             @Override
@@ -335,7 +320,6 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
         //queue initial songs in list
         if(event.equals(PlayerEvent.kSpPlaybackNotifyPlay)){
             if(!queueFlag){
-
                 for(Song song : mTrackList){
                     String tempSongID = song.songID;
                     if(!tempSongID.equals(mPlayerMetaData.currentTrack.uri)){
@@ -349,10 +333,9 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
                 }
                 queueFlag = true;
             }
-
-
         }
 
+        //code to show icon in list view of song that is playing
         if(event.equals(PlayerEvent.kSpPlaybackNotifyPlay) || event.equals(PlayerEvent.kSpPlaybackNotifyTrackChanged )) {
 
             for (Map.Entry<Song, Boolean> currentEntry : mTrackMap.entrySet()) {
@@ -379,7 +362,6 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
                 boolean flag = false;
                 View view = list.getChildAt(i-start);
 
-
                 Iterator<Map.Entry<Song,Boolean>> iter = tempMap.entrySet().iterator();
                 while (iter.hasNext()) {
                     Map.Entry<Song,Boolean> currentEntry = iter.next();
@@ -388,7 +370,6 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
                         flag = true;
                         iter.remove();
                     }
-
                 }
                 if(flag){
                     (view.findViewById(R.id.currentTrackPlayingIcon)).setVisibility(View.VISIBLE);
@@ -401,12 +382,7 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
             }
         }
 
-
-
-//            //todo need to highlight the song that is playing in the list
-//        mCurrentTrackPlayingIcon = (ImageView) mTrackListView.findViewById(R.id.currentTrackPlayingIcon);
-//        mCurrentTrackPlayingIcon.setVisibility(View.VISIBLE);
-//        mCurrentTrackPlayingIcon.setImageResource(android.R.drawable.ic_media_play);
+        //update of UI showing name, artist, image of song
         if(mPlayerMetaData.currentTrack!= null && !mPlayerMetaData.currentTrack.name.equals(songTitle)){
             songTitle.setText(mPlayerMetaData.currentTrack.name);
             songArtist.setText(mPlayerMetaData.currentTrack.artistName);
