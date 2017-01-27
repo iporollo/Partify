@@ -3,9 +3,10 @@ package ip.partyplaylist.controllers;
 import android.content.Context;
 import android.util.Log;
 
-import com.spotify.sdk.android.player.Player;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -63,7 +64,7 @@ public class HostPlayerController {
     }
 
 
-    public void getCurrentPlaylist() {
+    public void updateLocalCurrentPlaylist() {
         String playlistDesired = mSharedPreferenceHelper.getCurrentPlaylistId();
 
         mCurrentPlaylist = mSpotifyService.getPlaylist(mSharedPreferenceHelper.getCurrentUserId(), playlistDesired);
@@ -71,7 +72,7 @@ public class HostPlayerController {
 
     public ArrayList<Song> createSongModelArrayList() {
 
-        getCurrentPlaylist();
+        updateLocalCurrentPlaylist();
 
         mTrackList = new ArrayList<>();
 
@@ -123,8 +124,8 @@ public class HostPlayerController {
                 new Callback<Pager<PlaylistTrack>>() {
                     @Override
                     public void success(Pager<PlaylistTrack> playlistTrackPager, Response response) {
-                        getCurrentPlaylist();
-                        updateCurrentFirebaseParty(mCurrentParty);
+                        updateLocalCurrentPlaylist();
+                        updateCurrentFirebaseParty();
                     }
 
                     @Override
@@ -135,9 +136,16 @@ public class HostPlayerController {
 
     }
 
+    private void updateCurrentFirebaseParty() {
 
-    public void updateCurrentFirebaseParty(Party currentParty) {
-        //todo firebase update of party
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("parties");
+
+        myRef.child(mSharedPreferenceHelper.getCurrentPartyId()).setValue(mCurrentParty, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+            }
+        });
     }
 
 

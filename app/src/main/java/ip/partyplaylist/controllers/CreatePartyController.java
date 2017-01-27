@@ -3,9 +3,11 @@ package ip.partyplaylist.controllers;
 import android.content.Context;
 import android.util.Log;
 
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,6 +34,10 @@ public class CreatePartyController {
     private final SharedPreferenceHelper mSharedPreferenceHelper;
     private final SpotifyService mSpotifyService;
     private Party mCurrentParty;
+    private String partyID;
+    private FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private DatabaseReference myRef = database.getReference("parties");
+
 
     public CreatePartyController(CreatePartyScreenActions createPartyScreenActions) {
         mCreatePartyScreenActions = createPartyScreenActions;
@@ -43,6 +49,7 @@ public class CreatePartyController {
 
     }
 
+
     public void onSaveParty(String partyName, ArrayList<Song> trackList) {
         if (partyName.trim().length() == 0) {
             mCreatePartyScreenActions.showError("Party Name Invalid");
@@ -50,8 +57,40 @@ public class CreatePartyController {
             mCurrentParty = new Party(partyName, trackList);
             mSharedPreferenceHelper.saveCurrentPlayListName(partyName);
 
+            createUniquePartyID();
+            mCurrentParty.setPartyId(partyID);
             createSpotifyPlaylist();
         }
+    }
+
+    private void createUniquePartyID(){
+        partyID = "";
+        double d;
+        for (int i = 1; i <= 5; i++) {
+            d = Math.random() * 10;
+            partyID = partyID + ((int)d);
+        }
+
+        myRef.child(partyID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    // handle the case where the data already exists
+                    createUniquePartyID();
+                }
+                else {
+                    // handle the case where the data does not yet exist
+                    mSharedPreferenceHelper.saveCurrentPartyId(partyID);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError firebaseError) { }
+        });
+    }
+
+    public String getPartyID(){
+        return partyID;
     }
 
     private void createSpotifyPlaylist() {
@@ -129,13 +168,12 @@ public class CreatePartyController {
     }
 
     private void saveNewParty(Party tmpParty) {
-        // Tracks have been added to Spotify playlist, will need to save to firebase for the specific playlist code
+        // Tracks have been added to Spotify playlist,
+        // save to firebase for the specific playlist code
         mCurrentParty.trackList.clear();
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("parties");
 
-        myRef.child(tmpParty.name).setValue(tmpParty, new DatabaseReference.CompletionListener() {
+        myRef.child(tmpParty.partyId).setValue(tmpParty, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                 mCreatePartyScreenActions.showPartyCreatedScreen();
