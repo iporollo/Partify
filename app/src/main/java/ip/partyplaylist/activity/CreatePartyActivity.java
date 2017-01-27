@@ -29,6 +29,7 @@ public class CreatePartyActivity extends AppCompatActivity implements
     private PartifyTracksAdapter mTracksAdapter;
     private ArrayList<Song> mCurrentTrackList = new ArrayList<>();
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +47,6 @@ public class CreatePartyActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 mCreatePartyController.onSaveParty(mPartyNameEditText.getText().toString(), mCurrentTrackList);
-                //here we need to save to firebase with unique party code number
             }
         });
 
@@ -81,7 +81,8 @@ public class CreatePartyActivity extends AppCompatActivity implements
     @Override
     public void showPartyCreatedScreen() {
         ///show unique code number
-        Toast.makeText(this, "Party Created!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Your party ID: " + mCreatePartyController.getPartyID(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Party Created!", Toast.LENGTH_SHORT).show();
         Intent i = new Intent(CreatePartyActivity.this, HostPlayerActivity.class);
         startActivity(i);
     }

@@ -82,9 +82,6 @@ public class LoginActivity extends AppCompatActivity implements
                 String accessToken = response.getAccessToken();
                 mLoginActivityController.onUserLoggedInSuccessfully(accessToken);
 
-                //idk if this goes in the controller or here - implementing player
-               // Config playerConfig = new Config(this, accessToken, mLoginActivityController.CLIENT_ID);
-
             }
         }
     }

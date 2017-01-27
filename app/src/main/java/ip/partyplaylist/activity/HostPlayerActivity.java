@@ -61,7 +61,7 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
 
     private SlidingUpPanelLayout mSwipeUpPanel;
     private ImageView mSwipeUpBarImage;
-    private TextView mSwipeUpBarTitle, mSwipeUpBarDetail, mPlayerTimeForward;
+    private TextView mSwipeUpBarTitle, mSwipeUpBarDetail, mPlayerTimeForward, tmpPartyIdHolder;
     private ImageButton mSwipeUpBarButton;
     private SeekBar mSeekBar;
 
@@ -108,6 +108,7 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
         mSwipeUpBarDetail = (TextView) findViewById(R.id.txtSwipeUpBarDetail);
         mSeekBar = (SeekBar) findViewById(R.id.seekBar);
         mPlayerTimeForward = (TextView) findViewById(R.id.playerTimeForward);
+        tmpPartyIdHolder = (TextView) findViewById(R.id.tmpPartyIdTxt);
 
 
         //hide the swipe up bar at first
@@ -115,6 +116,7 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
 
         //set name of playlist in main view
         mPlaylistName.setText(mSharedPreferenceHelper.getCurrentPlaylistName());
+        tmpPartyIdHolder.setText(mSharedPreferenceHelper.getCurrentPartyId());
 
         //add song button clicked action
         mAddButton.setOnClickListener(new View.OnClickListener() {
