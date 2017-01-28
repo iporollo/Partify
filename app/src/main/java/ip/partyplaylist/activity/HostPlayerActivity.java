@@ -155,6 +155,8 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
         mPartifyTrackListAdapter = new PartifyTracksAdapter(mTrackMap, mTrackList, this);
         mTrackListView.setAdapter(mPartifyTrackListAdapter);
 
+        mHostPlayerController.updateCurrentFirebaseParty();
+
     }
 
     //play pause button

@@ -136,7 +136,7 @@ public class HostPlayerController {
 
     }
 
-    private void updateCurrentFirebaseParty() {
+    public void updateCurrentFirebaseParty() {
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("parties");
