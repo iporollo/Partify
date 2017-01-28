@@ -5,8 +5,11 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -17,16 +20,11 @@ import ip.partyplaylist.model.Song;
 import ip.partyplaylist.model.Party;
 import ip.partyplaylist.screen_actions.SearchPartyScreenActions;
 
-public class SearchPartyActivity extends AppCompatActivity implements
-        SearchPartyScreenActions
-        {
-
-    private static final String TAG = SearchPartyActivity.class.getSimpleName();
-    public static final String CURRENT_PARTY = "party";
+public class SearchPartyActivity extends AppCompatActivity implements SearchPartyScreenActions{
 
     private SearchPartyController mSearchPartyController;
-    private ListView mPartiesListView;
-    private ProgressBar mLoadingPartiesProgress;
+    private EditText mPartyID;
+    private Button mEnterParty;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,41 +33,27 @@ public class SearchPartyActivity extends AppCompatActivity implements
 
         mSearchPartyController = new SearchPartyController(this);
 
-        mPartiesListView = (ListView) findViewById(R.id.parties_list);
-        mLoadingPartiesProgress = (ProgressBar) findViewById(R.id.loading_parties_list);
+        mPartyID = (EditText) findViewById(R.id.party_id_edit_text);
+        mEnterParty = (Button) findViewById(R.id.btnEnterParty);
 
-        mPartiesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+        mEnterParty.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Party selectedParty = (Party) mPartiesListView.getItemAtPosition(position);
-
-                if(selectedParty.trackList == null) {
-                    selectedParty.trackList = new ArrayList<Song>();
-                }
-
-                Intent startPartyDetailsScreen = new Intent(SearchPartyActivity.this,
-                        PartyDetailsActivity.class);
-
-                startPartyDetailsScreen.putExtra(CURRENT_PARTY, selectedParty);
-
-                startActivity(startPartyDetailsScreen);
+            public void onClick(View v) {
+                showPartyJoinedScreen(mSearchPartyController.onEnterButtonPressed(mPartyID.getText().toString()));
             }
         });
 
     }
 
-    protected void onStart() {
-        super.onStart();
-    }
-
-    protected void onStop() {
-        super.onStop();
-    }
-
     @Override
-    public void refreshPartyListInScreen(ArrayList<Party> parties) {
-        PartiesAdapter mPartiesAdapter = new PartiesAdapter(this, parties);
-        mPartiesListView.setAdapter(mPartiesAdapter);
-        mLoadingPartiesProgress.setVisibility(View.GONE);
+    public void showPartyJoinedScreen(boolean isValidPartyID) {
+        if(isValidPartyID){
+            Toast.makeText(this, "Party Joined!", Toast.LENGTH_SHORT).show();
+// todo redirect
+//            Intent i = new Intent(SearchPartyActivity.this, somename.class);
+//            startActivity(i);
+        }
     }
+
 }

@@ -81,7 +81,7 @@ public class CreatePartyActivity extends AppCompatActivity implements
     @Override
     public void showPartyCreatedScreen() {
         ///show unique code number
-        Toast.makeText(this, "Your party ID: " + mCreatePartyController.getPartyID(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Your party ID: " + mCreatePartyController.getPartyID(), Toast.LENGTH_LONG).show();
         //Toast.makeText(this, "Party Created!", Toast.LENGTH_SHORT).show();
         Intent i = new Intent(CreatePartyActivity.this, HostPlayerActivity.class);
         startActivity(i);

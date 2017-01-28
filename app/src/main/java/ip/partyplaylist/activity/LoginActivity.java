@@ -56,10 +56,7 @@ public class LoginActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
 
-                //function when Join button is clicked
-                //Join activity controller needs to be implented
-
-                //mJoinButton.setVisibility(View.GONE);
+                showJoinPartyScreen();
             }
         });
     }
@@ -112,19 +109,16 @@ public class LoginActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void showMainScreen() {
-        Intent loadMainPartifyScreen = new Intent(this, CreatePartyActivity.class);
-        startActivity(loadMainPartifyScreen);
+    public void showCreatePartyScreen() {
+        Intent loadCreatePartyScreen = new Intent(this, CreatePartyActivity.class);
+        startActivity(loadCreatePartyScreen);
         finish();
     }
 
-
-
-    // shows join party screen
-//    @Override
-//    public void showJoinScreen() {
-//        Intent loadMainPartifyScreen = new Intent(this, CreatePartyActivity.class);
-//        startActivity(loadMainPartifyScreen);
-//        finish();
-//    }
+    @Override
+    public void showJoinPartyScreen() {
+        Intent loadJoinPartyScreen = new Intent(this, SearchPartyActivity.class);
+        startActivity(loadJoinPartyScreen);
+        finish();
+    }
 }
