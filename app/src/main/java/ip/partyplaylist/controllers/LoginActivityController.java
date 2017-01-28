@@ -71,12 +71,12 @@ public class LoginActivityController {
             }
         });
 
-        ((LoginScreenActions) mContext).showMainScreen();
+        ((LoginScreenActions) mContext).showCreatePartyScreen();
     }
 
     public void onCheckIfUserIsLoggedIn() {
         if(mSharedPreferenceHelper.getCurrentSpotifyToken().length() != 0) {
-            ((LoginScreenActions) mContext).showMainScreen();
+            ((LoginScreenActions) mContext).showCreatePartyScreen();
         }
     }
 

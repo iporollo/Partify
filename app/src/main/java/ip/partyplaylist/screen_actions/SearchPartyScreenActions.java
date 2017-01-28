@@ -6,5 +6,5 @@ import ip.partyplaylist.model.Party;
 
 
 public interface SearchPartyScreenActions {
-    void refreshPartyListInScreen(ArrayList<Party> parties);
+    void showPartyJoinedScreen(boolean isValidPartyID);
 }

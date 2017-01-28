@@ -5,18 +5,28 @@
     android:layout_height="match_parent"
     tools:context=".activity.SearchPartyActivity">
 
-    <ListView
-        android:id="@+id/parties_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="vertical" />
-
-    <ProgressBar
-        android:id="@+id/loading_parties_list"
-        style="?android:attr/progressBarStyleLarge"
+    <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:inputType="text"
+        android:hint="Party Code"
+        android:ems="10"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true" />
+        android:layout_marginTop="80dp"
+        android:id="@+id/party_id_edit_text" >
+        <requestFocus/>
+    </EditText>
 
+    <Button
+        android:text="Enter Party"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/party_id_edit_text"
+        android:layout_marginTop="26dp"
+        android:id="@+id/btnEnterParty"
+        android:layout_alignRight="@+id/party_id_edit_text"
+        android:layout_alignEnd="@+id/party_id_edit_text"
+        android:layout_alignLeft="@+id/party_id_edit_text"
+        android:layout_alignStart="@+id/party_id_edit_text" />
 </RelativeLayout>
