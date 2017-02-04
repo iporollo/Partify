@@ -86,17 +86,6 @@ public class PartifyTracksAdapter extends BaseAdapter {
             viewHolder.trackNameTV.setText(track.songName);
             viewHolder.trackArtistTV.setText(track.songArtistName);
 
-//            if(mTrackMap != null) {
-//                for (Map.Entry<Song, Boolean> currentEntry : mTrackMap.entrySet()) {
-//                    if (currentEntry.getValue()) {
-//                        viewHolder.addTrackIcon.setVisibility(View.VISIBLE);
-//                        viewHolder.addTrackIcon.setImageResource(android.R.drawable.ic_media_play);
-//                    } else {
-//                        viewHolder.addTrackIcon.setVisibility(View.GONE);
-//                    }
-//                }
-//            }
-
         }
 
         return convertView;

@@ -12,7 +12,6 @@
     sothree:umanoShadowHeight="4dp"
     sothree:umanoDragView="@+id/dragJoinedPartyView">
 
-
     <!--MAIN VIEW-->
 
     <RelativeLayout
@@ -86,17 +85,18 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:gravity="start"
-                android:id="@+id/swipeUpBarImageJoinedParty" />
+                android:id="@+id/swipeUpBarSongArtImageJoinedParty" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
+                android:id="@+id/swipeUpBarLinearLayout"
                 android:orientation="vertical"
                 android:gravity="center_vertical|center_horizontal"
                 android:layout_gravity="center"
                 android:layout_marginLeft="4dp"
                 android:layout_alignParentTop="true"
-                android:layout_toRightOf="@+id/swipeUpBarImageJoinedParty">
+                android:layout_toRightOf="@+id/swipeUpBarSongArtImageJoinedParty">
 
                 <TextView
                     android:layout_height="wrap_content"
@@ -128,6 +128,14 @@
                     android:fontFamily="sans-serif"/>
 
             </LinearLayout>
+
+            <ImageView
+                android:adjustViewBounds="false"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:gravity="end"
+                android:id="@+id/swipeUpBarSongStateImageJoinedParty"
+                android:layout_toRightOf="@+id/swipeUpBarLinearLayout"/>
 
         </RelativeLayout>
 

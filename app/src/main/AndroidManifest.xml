@@ -27,7 +27,7 @@
         <activity android:name=".activity.SearchPartyActivity" />
         <activity android:name=".activity.CreatePartyActivity"
             android:windowSoftInputMode="adjustPan"/>
-        <activity android:name=".activity.PartyDetailsActivity" />
+        <activity android:name=".activity.JoinedPartyActivity" />
         <activity android:name=".activity.SearchTrackActivity"
             android:theme="@style/SplashTheme"
             android:windowSoftInputMode="adjustPan|stateVisible"/>

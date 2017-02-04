@@ -35,7 +35,6 @@ public class HostPlayerController {
     private SpotifyApi mSpotifyApi;
     private Party mCurrentParty;
     private ArrayList<Song> mTrackList;
-    private ArrayList<String> mSongListOfStrings;
     private Playlist mCurrentPlaylist;
 
 
