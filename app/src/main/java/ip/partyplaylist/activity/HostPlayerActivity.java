@@ -147,6 +147,7 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
 
         //creates Party object with the current tracklist
         mCurrentParty = mHostPlayerController.getInitialParty(mTrackList);
+        mCurrentParty.setPartyAccessToken(mSharedPreferenceHelper.getCurrentSpotifyToken());
 
         for(Song s : mTrackList){
             mTrackMap.put(s,false);

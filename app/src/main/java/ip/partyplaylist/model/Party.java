@@ -5,9 +5,6 @@ import com.google.firebase.database.IgnoreExtraProperties;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-/**
- * Created by az on 21/05/16.
- */
 @IgnoreExtraProperties
 public class Party implements Serializable {
 
@@ -16,6 +13,7 @@ public class Party implements Serializable {
     public String playlistId;
     public String hostId;
     public String partyId;
+    public String spotifyAccessToken;
 
     public Party() {
 
@@ -41,4 +39,6 @@ public class Party implements Serializable {
     public void setPartyId(String partyId) {
         this.partyId = partyId;
     }
+
+    public void setPartyAccessToken(String accessToken) {this.spotifyAccessToken = accessToken;}
 }
