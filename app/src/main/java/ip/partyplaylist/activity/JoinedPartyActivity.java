@@ -31,6 +31,7 @@ import ip.partyplaylist.controllers.JoinedPartyController;
 import ip.partyplaylist.model.Party;
 import ip.partyplaylist.model.Song;
 import ip.partyplaylist.screen_actions.JoinedPartyScreenActions;
+import ip.partyplaylist.util.SharedPreferenceHelper;
 
 /**
  * Created by Ivan on 1/28/2017.
@@ -38,9 +39,11 @@ import ip.partyplaylist.screen_actions.JoinedPartyScreenActions;
 
 public class JoinedPartyActivity extends AppCompatActivity implements JoinedPartyScreenActions {
 
+    public static final int SEARCH_SONG_REQUEST_CODE = 1;
     private JoinedPartyController mJoinedPartyController;
     private ArrayList<Song> mTrackList;
     private ListView mTrackListView;
+
 
     private JoinedPartyTracksAdapter mJoinedPartyTracksAdapter;
 
@@ -64,6 +67,7 @@ public class JoinedPartyActivity extends AppCompatActivity implements JoinedPart
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_party_details);
         mCurrentPartyID = getIntent().getStringExtra("ENTERED_PARTYID");
+
         mJoinedPartyController = new JoinedPartyController(this);
         getCurrentPartyFirebase(mCurrentPartyID);
 
@@ -88,8 +92,6 @@ public class JoinedPartyActivity extends AppCompatActivity implements JoinedPart
         //hide the swipe up bar at first
         mSwipeUpPanel.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
 
-        //set name of playlist in main view
-
         //add song button clicked action
         mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,6 +111,7 @@ public class JoinedPartyActivity extends AppCompatActivity implements JoinedPart
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mCurrentParty = dataSnapshot.getValue(Party.class);
+                mJoinedPartyController.populateSharedPreferences(mCurrentParty);
                 setUpView();
             }
 
@@ -127,17 +130,18 @@ public class JoinedPartyActivity extends AppCompatActivity implements JoinedPart
         mJoinedPartyTracksAdapter = new JoinedPartyTracksAdapter(mCurrentParty.trackList, this);
         mTrackListView.setAdapter(mJoinedPartyTracksAdapter);
     }
+
     //Add song functionality
     @Override
     public void showSearchTrackScreen() {
         Intent startSearchSongActivity = new Intent(this, SearchTrackActivity.class);
-        startActivityForResult(startSearchSongActivity, CreatePartyActivity.SEARCH_SONG_REQUEST_CODE); // activates the method below
+        startActivityForResult(startSearchSongActivity, JoinedPartyActivity.SEARCH_SONG_REQUEST_CODE); // activates the method below
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CreatePartyActivity.SEARCH_SONG_REQUEST_CODE) {
+        if (requestCode == JoinedPartyActivity.SEARCH_SONG_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 Song trackToAdd = (Song) data.getExtras().get(SearchTrackActivity.TRACK);
                 boolean isAlreadyInList = false;

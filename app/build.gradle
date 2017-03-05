@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "24.0.0"
+    buildToolsVersion '25.0.0'
     defaultConfig {
         applicationId "ip.partyplaylist"
         minSdkVersion 15
@@ -24,7 +24,9 @@ repositories {
     flatDir {
         dirs 'libs'
     }
-    maven { url "https://jitpack.io" }
+    maven {
+        url "https://jitpack.io"
+    }
 
 }
 
@@ -38,22 +40,31 @@ dependencies {
     // This library handles authentication and authorization
     compile 'com.spotify.sdk:spotify-auth-beta23-noconnect-2.20b@aar'
 
+    //compile 'com.github.spotify:android-auth:9425c6a140'
+
     // This library handles music playback
     compile 'com.spotify.sdk:spotify-player-24-noconnect-2.20b@aar'
 
     //Android SDK Spotify Web API integration
     compile 'com.github.kaaes:spotify-web-api-android:0.4.1'
 
+    //Firebase
     compile 'com.google.firebase:firebase-core:9.8.0'
     compile 'com.google.firebase:firebase-database:9.8.0'
 
+    //Image handler
     compile 'com.squareup.picasso:picasso:2.5.2'
 
     compile 'com.github.AndroidDeveloperLB:AutoFitTextView:2'
 
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
 
+    //sliding up panel
     compile 'com.sothree.slidinguppanel:library:3.3.1'
+
+    //HTTP request handler
+    compile 'org.springframework.android:spring-android-rest-template:1.0.1.RELEASE'
+
 
     compile 'com.android.support:appcompat-v7:24.2.1'
     testCompile 'junit:junit:4.12'

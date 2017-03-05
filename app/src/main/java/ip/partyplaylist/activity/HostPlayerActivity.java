@@ -1,6 +1,7 @@
 package ip.partyplaylist.activity;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import ip.partyplaylist.R;
 import ip.partyplaylist.adapter.PartifyTracksAdapter;
@@ -39,6 +41,9 @@ import ip.partyplaylist.util.SharedPreferenceHelper;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
 import com.squareup.picasso.Picasso;
+
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
 
 
 public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlayer.NotificationCallback, HostPlayerScreenActions{//, CreatePartyScreenActions {
@@ -126,22 +131,6 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
             }
         });
 
-        //creates spotify music player
-        Config playerConfig = new Config(HostPlayerActivity.this, mSharedPreferenceHelper.getCurrentSpotifyToken(), CLIENT_ID);
-        Spotify.getPlayer(playerConfig, this, new SpotifyPlayer.InitializationObserver(){
-            @Override
-            public void onInitialized(SpotifyPlayer spotifyPlayer) {
-                mPlayer = spotifyPlayer;
-                mPlayer.addNotificationCallback(HostPlayerActivity.this);
-            }
-
-            @Override
-            public void onError(Throwable throwable) {
-                Log.e("HostPlayerActivity", "Could not initialize player: " + throwable.getMessage());
-            }
-        });
-
-
         //populates arraylist of Song objects
         mTrackList = mHostPlayerController.createSongModelArrayList();
 
@@ -156,8 +145,23 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
         mPartifyTrackListAdapter = new PartifyTracksAdapter(mTrackMap, mTrackList, this);
         mTrackListView.setAdapter(mPartifyTrackListAdapter);
 
-        mHostPlayerController.updateCurrentFirebaseParty();
+        mHostPlayerController.updateCurrentFirebaseParty(mCurrentParty);
 
+
+        //creates spotify music player
+        Config playerConfig = new Config(HostPlayerActivity.this, mSharedPreferenceHelper.getCurrentSpotifyToken(), CLIENT_ID);
+        Spotify.getPlayer(playerConfig, this, new SpotifyPlayer.InitializationObserver(){
+            @Override
+            public void onInitialized(SpotifyPlayer spotifyPlayer) {
+                mPlayer = spotifyPlayer;
+                mPlayer.addNotificationCallback(HostPlayerActivity.this);
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                Log.e("HostPlayerActivity", "Could not initialize player: " + throwable.getMessage());
+            }
+        });
     }
 
     //play pause button
@@ -401,6 +405,36 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
         }
 
     }
+
+
+
+//    private class HttpRequestTask extends AsyncTask<Void, Void, String> {
+//        @Override
+//        protected Greeting doInBackground(Void... params) {
+//            try {
+//                final String url = "http://rest-service.guides.spring.io/greeting";
+//                RestTemplate restTemplate = new RestTemplate();
+//                restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+//                String OAuthRefreshToken = restTemplate.getForObject(url, Greeting.class);
+//                return greeting;
+//            } catch (Exception e) {
+//                Log.e("MainActivity", e.getMessage(), e);
+//            }
+//
+//            return null;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(Greeting greeting) {
+//            TextView greetingIdText = (TextView) findViewById(R.id.id_value);
+//            TextView greetingContentText = (TextView) findViewById(R.id.content_value);
+//            greetingIdText.setText(greeting.getId());
+//            greetingContentText.setText(greeting.getContent());
+//        }
+//
+//    }
+
+
 
     @Override
     protected void onDestroy() {

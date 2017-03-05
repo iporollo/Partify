@@ -14,9 +14,17 @@ import com.spotify.sdk.android.player.Config;
 import com.spotify.sdk.android.player.ConnectionStateCallback;
 import com.spotify.sdk.android.player.Error;
 
+import java.io.IOException;
+
 import ip.partyplaylist.R;
 import ip.partyplaylist.controllers.LoginActivityController;
 import ip.partyplaylist.screen_actions.LoginScreenActions;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class LoginActivity extends AppCompatActivity implements
         ConnectionStateCallback,
@@ -61,12 +69,6 @@ public class LoginActivity extends AppCompatActivity implements
         });
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        mLoginActivityController.onCheckIfUserIsLoggedIn();
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -74,11 +76,8 @@ public class LoginActivity extends AppCompatActivity implements
 
         if (requestCode == LoginActivityController.REQUEST_CODE) {
             AuthenticationResponse response = AuthenticationClient.getResponse(resultCode, intent);
-            if (response.getType() == AuthenticationResponse.Type.TOKEN) {
-
-                String accessToken = response.getAccessToken();
-                mLoginActivityController.onUserLoggedInSuccessfully(accessToken);
-
+            if (response.getType() == AuthenticationResponse.Type.CODE) {
+                mLoginActivityController.onUserDataReceipt(response.getCode(), response.getState());
             }
         }
     }

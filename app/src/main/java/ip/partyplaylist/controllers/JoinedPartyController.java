@@ -1,5 +1,6 @@
 package ip.partyplaylist.controllers;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
@@ -10,9 +11,11 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 
+import ip.partyplaylist.activity.JoinedPartyActivity;
 import ip.partyplaylist.model.Party;
 import ip.partyplaylist.model.Song;
 import ip.partyplaylist.screen_actions.JoinedPartyScreenActions;
+import ip.partyplaylist.util.SharedPreferenceJoinPartyHelper;
 import kaaes.spotify.webapi.android.models.Pager;
 import kaaes.spotify.webapi.android.models.PlaylistTrack;
 import retrofit.Callback;
@@ -27,9 +30,12 @@ public class JoinedPartyController {
 
     private Party mCurrentParty;
     private JoinedPartyScreenActions mJoinedPartyScreenActions;
+    private SharedPreferenceJoinPartyHelper mSharedPreferenceHelper;
+
 
     public JoinedPartyController(JoinedPartyScreenActions joinedPartyScreenActions){
         mJoinedPartyScreenActions = joinedPartyScreenActions;
+        mSharedPreferenceHelper = new SharedPreferenceJoinPartyHelper((Context) mJoinedPartyScreenActions );
     }
 
     public void onAddTrackButtonPressed() {
@@ -47,5 +53,14 @@ public class JoinedPartyController {
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
             }
         });
+    }
+
+    public void populateSharedPreferences(Party currentParty){
+        mSharedPreferenceHelper.saveCurrentPartyId(currentParty.partyId);
+        mSharedPreferenceHelper.saveCurrentPlayListName(currentParty.name);
+        mSharedPreferenceHelper.saveCurrentPlayListId(currentParty.playlistId);
+        mSharedPreferenceHelper.saveCurrentUserId(currentParty.hostId);
+        mSharedPreferenceHelper.saveSpotifyToken(currentParty.spotifyAccessToken);
+
     }
 }

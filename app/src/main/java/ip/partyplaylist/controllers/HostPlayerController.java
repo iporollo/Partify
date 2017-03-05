@@ -124,7 +124,7 @@ public class HostPlayerController {
                     @Override
                     public void success(Pager<PlaylistTrack> playlistTrackPager, Response response) {
                         updateLocalCurrentPlaylist();
-                        updateCurrentFirebaseParty();
+                        updateCurrentFirebaseParty(mCurrentParty);
                     }
 
                     @Override
@@ -135,12 +135,12 @@ public class HostPlayerController {
 
     }
 
-    public void updateCurrentFirebaseParty() {
+    public void updateCurrentFirebaseParty(Party currentParty) {
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("parties");
 
-        myRef.child(mSharedPreferenceHelper.getCurrentPartyId()).setValue(mCurrentParty, new DatabaseReference.CompletionListener() {
+        myRef.child(mSharedPreferenceHelper.getCurrentPartyId()).setValue(currentParty, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
             }

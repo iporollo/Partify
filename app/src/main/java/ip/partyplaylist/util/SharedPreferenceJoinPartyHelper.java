@@ -2,25 +2,22 @@ package ip.partyplaylist.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import java.util.concurrent.TimeUnit;
 
 
-public class SharedPreferenceHelper {
+public class SharedPreferenceJoinPartyHelper {
 
-    private static final String PREFERENCES = "PartifyPreferences";
+    public static final String PREFERENCES = "PartifyPreferences";
 
-    private static final String CURRENT_SPOTIFY_TOKEN_KEY = "CurrentSpotifyToken";
-    private static final String CURRENT_USER_SPOTIFY_ID_KEY = "CurrentSpotifyID";
-    private static final String CURRENT_PLAYLIST_ID_KEY = "CurrentPlaylistID";
-    private static final String CURRENT_PARTY_ID_KEY = "CurrentPartyID";
-    private static final String CURRENT_PLAYLIST_NAME = "CurrentPlaylistName";
-    private static final String EXPIRES_AT = "expires_at";
-
+    public static final String CURRENT_SPOTIFY_TOKEN_KEY = "CurrentSpotifyToken";
+    public static final String CURRENT_USER_SPOTIFY_ID_KEY = "CurrentSpotifyID";
+    public static final String CURRENT_PLAYLIST_ID_KEY = "CurrentPlaylistID";
+    public static final String CURRENT_PARTY_ID_KEY = "CurrentPartyID";
+    public static final String CURRENT_PLAYLIST_NAME = "CurrentPlaylistName";
 
     private Context mContext;
     private SharedPreferences mSharedPreferences;
 
-    public SharedPreferenceHelper(Context context) {
+    public SharedPreferenceJoinPartyHelper(Context context) {
         mContext = context;
         mSharedPreferences = mContext.getSharedPreferences(PREFERENCES, 0);
     }
