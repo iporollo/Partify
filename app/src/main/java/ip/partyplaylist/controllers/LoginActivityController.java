@@ -21,6 +21,7 @@ import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.UserPrivate;
 import okhttp3.Call;
+import okhttp3.FormBody;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -165,7 +166,7 @@ public class LoginActivityController {
         });
     }
 
-    public void onUserLoggedInSuccessfully(String accessToken) {
+    public void onUserLoggedInSuccessfully(final String accessToken) {
         mSharedPreferenceHelper.saveSpotifyToken(accessToken);
 
         SpotifyApi mSpotifyApi = new SpotifyApi();
@@ -177,6 +178,7 @@ public class LoginActivityController {
             public void success(UserPrivate userPrivate, Response response) {
                 Log.d(TAG, "Obtained User Information.");
 
+                postUserID(accessToken, userPrivate.id);
                 mSharedPreferenceHelper.saveCurrentUserId(userPrivate.id);
             }
 
@@ -189,5 +191,31 @@ public class LoginActivityController {
         ((LoginScreenActions) mContext).showCreatePartyScreen();
     }
 
+    public void postUserID(String accessToken, String id) {
 
+        RequestBody formBody = new FormBody.Builder()
+                .add("spotifyID", id)
+                .add("token", accessToken)
+                .build();
+        Request request = new Request.Builder()
+                .url("https://aqueous-taiga-60305.herokuapp.com/user/updateuserspotifyid")
+                .post(formBody)
+                .build();
+
+        client.newCall(request).enqueue(new okhttp3.Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, final okhttp3.Response noSpecificResponse) throws IOException {
+                if (!noSpecificResponse.isSuccessful()) {
+                    throw new IOException("Unexpected code " + noSpecificResponse);
+                }
+            }
+        });
+
+
+    }
 }
