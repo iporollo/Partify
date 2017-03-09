@@ -96,7 +96,7 @@ public class LoginActivityController {
 
     public void getRailsUserID(){
 
-        HttpUrl.Builder urlBuilder = HttpUrl.parse("https://aqueous-taiga-60305.herokuapp.com/user/justcreatedrailsid").newBuilder();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse("https://aqueous-taiga-60305.herokuapp.com/user/spotifyuserid").newBuilder();
         String url = urlBuilder.build().toString();
 
         Request request = new Request.Builder()
@@ -117,8 +117,8 @@ public class LoginActivityController {
                     String jsonData = userID.body().string();
                     try {
                         JSONObject Jobject = new JSONObject(jsonData);
-                        String uid = Jobject.getString("uid");
-                        getUserAccessToken(uid);
+                        String id = Jobject.getString("id");
+                        getUserAccessToken(id);
 
                     }
                     catch (JSONException e) {
@@ -131,10 +131,10 @@ public class LoginActivityController {
 
     }
 
-    public void getUserAccessToken(String uid){
+    public void getUserAccessToken(String id){
 
         HttpUrl.Builder urlBuilder = HttpUrl.parse("https://aqueous-taiga-60305.herokuapp.com/user/givetoken").newBuilder();
-        urlBuilder.addQueryParameter("user", uid);
+        urlBuilder.addQueryParameter("user", id);
         String url = urlBuilder.build().toString();
 
         Request request = new Request.Builder()
@@ -178,7 +178,6 @@ public class LoginActivityController {
             public void success(UserPrivate userPrivate, Response response) {
                 Log.d(TAG, "Obtained User Information.");
 
-                postUserID(accessToken, userPrivate.id);
                 mSharedPreferenceHelper.saveCurrentUserId(userPrivate.id);
             }
 
@@ -191,31 +190,4 @@ public class LoginActivityController {
         ((LoginScreenActions) mContext).showCreatePartyScreen();
     }
 
-    public void postUserID(String accessToken, String id) {
-
-        RequestBody formBody = new FormBody.Builder()
-                .add("spotifyID", id)
-                .add("token", accessToken)
-                .build();
-        Request request = new Request.Builder()
-                .url("https://aqueous-taiga-60305.herokuapp.com/user/updateuserspotifyid")
-                .post(formBody)
-                .build();
-
-        client.newCall(request).enqueue(new okhttp3.Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onResponse(Call call, final okhttp3.Response noSpecificResponse) throws IOException {
-                if (!noSpecificResponse.isSuccessful()) {
-                    throw new IOException("Unexpected code " + noSpecificResponse);
-                }
-            }
-        });
-
-
-    }
 }
