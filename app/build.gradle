@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 24
+    compileSdkVersion 25
     buildToolsVersion '25.0.0'
     defaultConfig {
         applicationId "ip.partyplaylist"
@@ -10,6 +10,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         release {
@@ -17,6 +18,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+}
+
+ext {
+    supportLibVersion = '25.2.0'  // variable that can be referenced to keep support libs consistent
 }
 
 repositories {
@@ -39,8 +44,6 @@ dependencies {
 
     // This library handles authentication and authorization
     compile 'com.spotify.sdk:spotify-auth-beta23-noconnect-2.20b@aar'
-
-    //compile 'com.github.spotify:android-auth:9425c6a140'
 
     // This library handles music playback
     compile 'com.spotify.sdk:spotify-player-24-noconnect-2.20b@aar'
@@ -65,8 +68,15 @@ dependencies {
     //HTTP request handler
     compile 'org.springframework.android:spring-android-rest-template:1.0.1.RELEASE'
 
+    //design
+    compile "com.android.support:appcompat-v7:${supportLibVersion}"
+    compile "com.android.support:design:${supportLibVersion}"
+    compile "com.android.support:percent:${supportLibVersion}"
+    compile "com.android.support:support-vector-drawable:${supportLibVersion}" // VectorDrawableCompat
+    compile "com.android.support:animated-vector-drawable:${supportLibVersion}" // AnimatedVectorDrawableCompat
+    compile "com.android.support:support-annotations:${supportLibVersion}"
 
-    compile 'com.android.support:appcompat-v7:24.2.1'
+
     testCompile 'junit:junit:4.12'
 
 
