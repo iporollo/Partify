@@ -43,6 +43,7 @@ public class CreatePartyController {
         mCreatePartyScreenActions = createPartyScreenActions;
         mSharedPreferenceHelper = new SharedPreferenceHelper((Context) createPartyScreenActions);
 
+
         SpotifyApi mSpotifyApi = new SpotifyApi();
         mSpotifyApi.setAccessToken(mSharedPreferenceHelper.getCurrentSpotifyToken());
         mSpotifyService = mSpotifyApi.getService();
@@ -59,6 +60,7 @@ public class CreatePartyController {
 
             createUniquePartyID();
             mCurrentParty.setPartyId(partyID);
+
             createSpotifyPlaylist();
         }
     }
@@ -168,10 +170,8 @@ public class CreatePartyController {
     }
 
     private void saveNewParty(Party tmpParty) {
-        // Tracks have been added to Spotify playlist,
-        // save to firebase for the specific playlist code
-        mCurrentParty.trackList.clear();
 
+        mCurrentParty.trackList.clear();
 
         myRef.child(tmpParty.partyId).setValue(tmpParty, new DatabaseReference.CompletionListener() {
             @Override

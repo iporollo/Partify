@@ -12,6 +12,9 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+
+
         <activity
             android:name=".activity.LoginActivity"
             android:theme="@style/SplashTheme">
@@ -21,22 +24,28 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name="com.spotify.sdk.android.authentication.LoginActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+        </activity>
+
         <activity android:name=".activity.SearchPartyActivity" />
+
         <activity android:name=".activity.CreatePartyActivity"
             android:windowSoftInputMode="adjustPan"/>
-        <activity android:name=".activity.PartyDetailsActivity" />
+
+        <activity android:name=".activity.JoinedPartyActivity" />
+
         <activity android:name=".activity.SearchTrackActivity"
             android:theme="@style/SplashTheme"
             android:windowSoftInputMode="adjustPan|stateVisible"/>
 
         <activity android:name=".activity.HostPlayerActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
         </activity>
     </application>
 

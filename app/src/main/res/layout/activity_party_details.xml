@@ -1,28 +1,208 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.sothree.slidinguppanel.SlidingUpPanelLayout
+    xmlns:sothree="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/sliding_layout_joined_party"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".activity.PartyDetailsActivity">
+    android:gravity="bottom"
+    sothree:umanoPanelHeight="50dp"
+    sothree:umanoShadowHeight="4dp"
+    sothree:umanoDragView="@+id/dragJoinedPartyView">
 
-    <ListView
-        android:id="@+id/party_track_list"
+    <!--MAIN VIEW-->
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="0.2">
+        android:id="@+id/songLayoutJoinedParty">
 
-    </ListView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical|center_horizontal"
+            android:id="@+id/topPanelMainViewJoinedParty">
 
-    <Button
-        android:id="@+id/add_track_button"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/playlistNameJoinedParty"
+                android:text="Playlist name here"
+                android:layout_marginLeft="11dp"
+                android:layout_marginStart="11dp"
+                android:gravity="left"
+                android:layout_weight="1"
+                android:textSize="20sp" />
+
+            <Button
+                android:text="Add Song"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:id="@+id/btnAddSongJoinedParty" />
+        </LinearLayout>
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:id="@+id/trackListJoinedParty"
+            android:layout_below="@+id/topPanelMainViewJoinedParty"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:text="PartyId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:id="@+id/tmpPartyIdTxtJoinedParty" />
+
+    </RelativeLayout>
+
+
+    <!--PLAYER VIEW-->
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:text="Add Track" />
+        android:id="@+id/joinedPartyPlayerLayout"
+        android:clickable="true">
 
-</LinearLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:id="@+id/SwipeUpBarLayoutJoinedParty">
+
+            <ImageView
+                android:adjustViewBounds="false"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:gravity="start"
+                android:id="@+id/swipeUpBarSongArtImageJoinedParty" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:id="@+id/swipeUpBarLinearLayout"
+                android:orientation="vertical"
+                android:gravity="center_vertical|center_horizontal"
+                android:layout_gravity="center"
+                android:layout_marginLeft="4dp"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/swipeUpBarSongArtImageJoinedParty">
+
+                <TextView
+                    android:layout_height="wrap_content"
+                    android:id="@+id/txtSwipeUpBarTitleJoinedParty"
+                    android:gravity="center"
+                    android:text="Song title here"
+                    android:textAlignment="viewStart"
+                    android:ellipsize="marquee"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:maxLines="1"
+                    android:textSize="20sp"
+                    android:layout_width="wrap_content" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:id="@+id/txtSwipeUpBarDetailJoinedParty"
+                    android:text="Artist Title here"
+                    android:textStyle="normal|italic"
+                    android:textAlignment="viewStart"
+                    android:ellipsize="marquee"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:maxLines="1"
+                    android:fontFamily="sans-serif"/>
+
+            </LinearLayout>
+
+            <ImageView
+                android:adjustViewBounds="false"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:gravity="end"
+                android:id="@+id/swipeUpBarSongStateImageJoinedParty"
+                android:layout_toRightOf="@+id/swipeUpBarLinearLayout"/>
+
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtSongTitleJoinedParty"
+            android:text="Song title here"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:maxLines="1"
+            android:textSize="18sp"
+            android:layout_marginTop="50dp"
+            android:layout_marginLeft="4dp"
+            android:layout_below="@+id/imgSongCoverJoinedParty"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtSongArtistJoinedParty"
+            android:text="Artist Title here"
+            android:textStyle="normal|italic"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:maxLines="1"
+            android:layout_marginLeft="4dp"
+            android:fontFamily="sans-serif"
+            android:layout_below="@+id/txtSongTitleJoinedParty"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp" />
+
+
+        <ImageView
+            android:id="@+id/imgSongCoverJoinedParty"
+            android:adjustViewBounds="false"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="46dp"
+            android:layout_below="@+id/SwipeUpBarLayoutJoinedParty"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:text="0:00"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/playerTimeForwardJoinedParty"
+            android:layout_above="@+id/progressBar"
+            android:layout_marginBottom="4dp"
+            android:layout_marginLeft="10dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <ProgressBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressBar"
+            style="@style/Widget.AppCompat.SeekBar"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="45dp" />
+
+    </RelativeLayout>
+
+</com.sothree.slidinguppanel.SlidingUpPanelLayout>

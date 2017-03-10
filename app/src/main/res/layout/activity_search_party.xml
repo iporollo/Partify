@@ -29,4 +29,5 @@
         android:layout_alignEnd="@+id/party_id_edit_text"
         android:layout_alignLeft="@+id/party_id_edit_text"
         android:layout_alignStart="@+id/party_id_edit_text" />
+
 </RelativeLayout>

@@ -5,12 +5,40 @@
     android:layout_height="wrap_content">
 
     <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:id="@+id/linearVotingButtonLayout"
+        android:visibility="gone"
+        android:layout_alignParentLeft="true">
+
+        <ImageButton
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@android:drawable/ic_input_add"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:id="@+id/upvoteButton" />
+
+        <ImageButton
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@android:drawable/ic_delete"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:id="@+id/downvoteButton" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center"
         android:id="@+id/linearLayout"
-        android:layout_alignParentRight="true">
+        android:layout_toRightOf="@+id/linearVotingButtonLayout">
 
         <com.lb.auto_fit_textview.AutoResizeTextView
             android:id="@+id/track_name"

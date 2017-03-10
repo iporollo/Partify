@@ -12,9 +12,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-/**
- * Created by az on 29/05/16.
- */
+
 public class SearchTrackController {
     private static final String TAG = SearchTrackController.class.getSimpleName();
     private final SearchTrackScreenActions mSearchTrackScreenActions;
