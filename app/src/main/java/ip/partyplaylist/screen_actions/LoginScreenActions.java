@@ -1,8 +1,9 @@
 package ip.partyplaylist.screen_actions;
 
 
+import ip.partyplaylist.util.SharedPreferenceHelper;
+
 public interface LoginScreenActions {
 
-    void showCreatePartyScreen();
-    void showJoinPartyScreen();
+    void showHostPlayerScreen();
 }

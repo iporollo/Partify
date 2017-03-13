@@ -187,7 +187,6 @@ public class LoginActivityController {
             }
         });
 
-        ((LoginScreenActions) mContext).showCreatePartyScreen();
     }
 
 }

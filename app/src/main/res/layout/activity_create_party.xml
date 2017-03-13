@@ -3,47 +3,213 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".activity.CreatePartyActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/party_name_edit_text"
+    <!--<RelativeLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_alignParentLeft="true"-->
+        <!--android:layout_alignParentStart="true">-->
+
+        <TableRow
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.3"
-            android:textSize="16sp"
-            android:hint="Party Name" >
-            <requestFocus/>
-        </EditText>
+            android:layout_height="wrap_content"
+            android:id="@+id/rowSetPartyName">
 
-        <ListView
-            android:id="@+id/party_track_list"
+            <ImageView
+                android:id="@+id/imgPartyName"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                app:srcCompat="@android:drawable/ic_menu_slideshow" />
+
+            <EditText
+                android:id="@+id/party_name_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.03"
+                android:hint="Party Name"
+                android:inputType="text"
+                android:textSize="16sp">
+
+                <requestFocus />
+            </EditText>
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/rowTextSettings"
+            android:layout_below="@+id/rowSetPartyName">
+
+
+            <TextView
+                android:id="@+id/txtCreatePartySettings"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:text="Settings"
+                android:textSize="14sp" />
+
+
+        </TableRow>
+
+        <TableRow
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"/>
+            android:layout_height="wrap_content"
+            android:id="@+id/rowGuestSongAddSetting"
+            android:layout_below="@+id/rowTextSettings">
 
-        <Button
+            <ImageView
+                android:id="@+id/imgGuestSongAddSetting"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                app:srcCompat="@android:drawable/ic_input_add" />
+
+            <TextView
+                android:id="@+id/txtGuestSongAddSetting"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:text="Guests add songs disabled"
+                android:textSize="14sp" />
+
+            <Switch
+                android:id="@+id/switchGuestSongAddSetting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+
+        </TableRow>
+
+        <TableRow
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.3"
-            android:text="Add Song"
-            android:id="@+id/add_track_button" />
+            android:layout_height="wrap_content"
+            android:id="@+id/rowDownVoteSetting"
+            android:layout_below="@+id/rowGuestSongAddSetting">
 
-        <Button
-            android:id="@+id/create_party"
+            <ImageView
+                android:id="@+id/imgDownVoteSetting"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                app:srcCompat="@android:drawable/arrow_down_float" />
+
+            <TextView
+                android:id="@+id/txtDownVoteSetting"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:text="Down-vote disabled"
+                android:textSize="14sp" />
+
+            <Switch
+                android:id="@+id/switchDownVoteSetting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </TableRow>
+
+        <TableRow
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.3"
-            android:text="Create" />
+            android:layout_height="wrap_content"
+            android:id="@+id/rowPartyLocation"
+            android:layout_below="@+id/rowDownVoteSetting">
 
-    </LinearLayout>
+            <ImageView
+                android:id="@+id/imgPartyLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                app:srcCompat="@android:drawable/ic_lock_idle_alarm" />
+
+            <TextView
+                android:id="@+id/txtPartyLocation"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:text="Get user's current location"
+                android:textSize="14sp" />
+
+            <ImageButton
+                android:id="@+id/btnPartyLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@android:drawable/ic_menu_rotate" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            >
+
+
+            <ImageView
+                android:id="@+id/imgSpotifyWarning"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                app:srcCompat="@android:drawable/ic_menu_slideshow" />
+
+            <TextView
+                android:id="@+id/txtSpotifyWarning"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:text="NOTICE! To create a party you need to have a Spotify Premium Account"
+                android:textSize="14sp" />
+
+
+        </TableRow>
+
+    <!--</RelativeLayout>-->
+
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_alignParentLeft="true"-->
+        <!--android:layout_alignParentStart="true"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:orientation="vertical"-->
+        <!--android:weightSum="1">-->
+
+        <!--<EditText-->
+            <!--android:id="@+id/party_name_edit_text"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_weight="0.03"-->
+            <!--android:hint="Party Name"-->
+            <!--android:inputType="text"-->
+            <!--android:textSize="16sp">-->
+
+            <!--<requestFocus />-->
+        <!--</EditText>-->
+
+        <!--<ListView-->
+        <!--android:id="@+id/party_track_list"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="0dp"-->
+        <!--android:layout_weight="1"/>-->
+
+        <!--<Button-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="0dp"-->
+        <!--android:layout_weight="0.3"-->
+        <!--android:text="Add Song"-->
+        <!--android:id="@+id/add_track_button" />-->
+
+        <!--<Button-->
+        <!--android:id="@+id/create_party"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="0dp"-->
+        <!--android:layout_weight="0.3"-->
+        <!--android:text="Create" />-->
+
+    <!--</LinearLayout>-->
 
 </RelativeLayout>

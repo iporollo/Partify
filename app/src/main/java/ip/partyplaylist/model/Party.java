@@ -14,6 +14,8 @@ public class Party implements Serializable {
     public String hostId;
     public String partyId;
     public String spotifyAccessToken;
+    public boolean guestSongAddState;
+    public boolean downVoteState;
 
     public Party() {
 
@@ -22,6 +24,12 @@ public class Party implements Serializable {
     public Party(String name, ArrayList<Song> trackList) {
         this.name = name;
         this.trackList = trackList;
+    }
+
+    public Party(String name, boolean guestSongAddState, boolean downVoteState){
+        this.name = name;
+        this.guestSongAddState = guestSongAddState;
+        this.downVoteState = downVoteState;
     }
 
     public void addTrack(Song trackToAdd) {

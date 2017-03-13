@@ -418,7 +418,7 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
 //                String OAuthRefreshToken = restTemplate.getForObject(url, Greeting.class);
 //                return greeting;
 //            } catch (Exception e) {
-//                Log.e("MainActivity", e.getMessage(), e);
+//                Log.e("MainTabActivity", e.getMessage(), e);
 //            }
 //
 //            return null;

@@ -22,7 +22,7 @@ public class SharedPreferenceHelper {
 
     public SharedPreferenceHelper(Context context) {
         mContext = context;
-        mSharedPreferences = mContext.getSharedPreferences(PREFERENCES, 0);
+        mSharedPreferences = mContext.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
     }
 
     public void saveSpotifyToken(String token) {

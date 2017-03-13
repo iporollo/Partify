@@ -55,6 +55,7 @@ public class HostPlayerController {
 
 
     public Party getInitialParty(ArrayList<Song> tracks){
+        //wrong, needs to be redone
         mCurrentParty = new Party(mSharedPreferenceHelper.getCurrentPlaylistName(), tracks);
         mCurrentParty.setPlaylistId(mSharedPreferenceHelper.getCurrentPlaylistId());
         mCurrentParty.setHostId(mSharedPreferenceHelper.getCurrentUserId());

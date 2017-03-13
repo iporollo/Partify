@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
+    tools:context=".fragments.PartyDashboardTabFragment"
+    android:weightSum="1">
+
+
+    <TextView
+        android:id="@+id/textViewHostPartyDivider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Host Party"
+        android:paddingBottom="10dp"/>
+
+    <Button
+        android:id="@+id/btnCreateNewParty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="+ Create New Party"/>
+
+    <TextView
+        android:id="@+id/textViewJoinPartyDivider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Parties Near You"
+        android:paddingTop="10dp"
+        android:paddingBottom="5dp"/>
+
+    <Button
+        android:id="@+id/btnSearchPartyWithCode"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:layout_weight="0.02"
+        android:paddingBottom="10dp"
+        android:text="Search By Code"
+        android:textAllCaps="false"
+        android:textSize="12sp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <GridView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </GridView>
+
+        <TextView
+            android:id="@+id/textViewNoPartiesNear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No parties found"
+            android:layout_centerHorizontal="true"
+            android:paddingTop="120dp"
+            android:paddingBottom="10dp"/>
+
+    </RelativeLayout>
+
+
+</LinearLayout>
