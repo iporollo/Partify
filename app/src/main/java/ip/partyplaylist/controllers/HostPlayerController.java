@@ -56,18 +56,18 @@ public class HostPlayerController {
 
     public Party getInitialParty(ArrayList<Song> tracks){
         //wrong, needs to be redone
-        mCurrentParty = new Party(mSharedPreferenceHelper.getCurrentPlaylistName(), tracks);
-        mCurrentParty.setPlaylistId(mSharedPreferenceHelper.getCurrentPlaylistId());
-        mCurrentParty.setHostId(mSharedPreferenceHelper.getCurrentUserId());
+        mCurrentParty = new Party(mSharedPreferenceHelper.getCurrentSpotifyPlaylistName(), tracks);
+        mCurrentParty.setPlaylistId(mSharedPreferenceHelper.getCurrentSpotifyPlaylistId());
+        mCurrentParty.setHostId(mSharedPreferenceHelper.getCurrentSpotifyUserId());
 
         return mCurrentParty;
     }
 
 
     public void updateLocalCurrentPlaylist() {
-        String playlistDesired = mSharedPreferenceHelper.getCurrentPlaylistId();
+        String playlistDesired = mSharedPreferenceHelper.getCurrentSpotifyPlaylistId();
 
-        mCurrentPlaylist = mSpotifyService.getPlaylist(mSharedPreferenceHelper.getCurrentUserId(), playlistDesired);
+        mCurrentPlaylist = mSpotifyService.getPlaylist(mSharedPreferenceHelper.getCurrentSpotifyUserId(), playlistDesired);
     }
 
     public ArrayList<Song> createSongModelArrayList() {

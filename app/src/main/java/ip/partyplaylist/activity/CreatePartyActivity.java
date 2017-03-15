@@ -140,20 +140,7 @@ public class CreatePartyActivity extends AppCompatActivity implements CreatePart
          return(super.onOptionsItemSelected(item));
      }
 
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        mPartyTrackList.setAdapter(mTracksAdapter);
-//    }
-//
-//    protected void onStart() {
-//        super.onStart();
-//    }
-//
-//    protected void onStop() {
-//        super.onStop();
-//    }
-//
+
     @Override
     public void showError(String error) {
         Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
@@ -168,7 +155,20 @@ public class CreatePartyActivity extends AppCompatActivity implements CreatePart
         i.putExtra("CREATED_PARTY", createdParty);
         startActivity(i);
     }
-
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        mPartyTrackList.setAdapter(mTracksAdapter);
+//    }
+//
+//    protected void onStart() {
+//        super.onStart();
+//    }
+//
+//    protected void onStop() {
+//        super.onStop();
+//    }
+//
 //    @Override
 //    public void showSearchTrackScreen() {
 //        Intent startSearchSongActivity = new Intent(this, SearchTrackActivity.class);

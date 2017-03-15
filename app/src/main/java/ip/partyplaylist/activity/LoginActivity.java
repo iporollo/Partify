@@ -24,7 +24,6 @@ public class LoginActivity extends AppCompatActivity implements
         ConnectionStateCallback, LoginScreenActions{
 
     private LoginActivityController mLoginActivityController;
-    private PartySavingLogicController mSavePartyContoller;
     private SharedPreferenceHelper mSharedPreferenceHelper;
 
     @Override
@@ -38,8 +37,9 @@ public class LoginActivity extends AppCompatActivity implements
             StrictMode.setThreadPolicy(policy);
         }
 
-        mLoginActivityController = new LoginActivityController(this);
-        mSavePartyContoller = new PartySavingLogicController(this);
+        Party party = (Party) getIntent().getSerializableExtra("CREATED_PARTY");
+
+        mLoginActivityController = new LoginActivityController(this,party);
         mSharedPreferenceHelper = new SharedPreferenceHelper(this);
 
 
@@ -55,9 +55,6 @@ public class LoginActivity extends AppCompatActivity implements
             AuthenticationResponse response = AuthenticationClient.getResponse(resultCode, intent);
             if (response.getType() == AuthenticationResponse.Type.CODE) {
                 mLoginActivityController.onUserDataReceipt(response.getCode(), response.getState());
-                Party party = (Party) getIntent().getSerializableExtra("CREATED_PARTY");
-                mSavePartyContoller.saveParty(party);
-                //showHostPlayerScreen();
             }
         }
     }

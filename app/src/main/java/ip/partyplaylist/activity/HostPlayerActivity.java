@@ -1,7 +1,6 @@
 package ip.partyplaylist.activity;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -28,7 +27,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import ip.partyplaylist.R;
 import ip.partyplaylist.adapter.PartifyTracksAdapter;
@@ -41,9 +39,6 @@ import ip.partyplaylist.util.SharedPreferenceHelper;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
 import com.squareup.picasso.Picasso;
-
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.client.RestTemplate;
 
 
 public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlayer.NotificationCallback, HostPlayerScreenActions{//, CreatePartyScreenActions {
@@ -120,7 +115,7 @@ public class HostPlayerActivity extends AppCompatActivity implements SpotifyPlay
         mSwipeUpPanel.setPanelState(PanelState.HIDDEN);
 
         //set name of playlist in main view
-        mPlaylistName.setText(mSharedPreferenceHelper.getCurrentPlaylistName());
+        mPlaylistName.setText(mSharedPreferenceHelper.getCurrentSpotifyPlaylistName());
         tmpPartyIdHolder.setText(mSharedPreferenceHelper.getCurrentPartyId());
 
         //add song button clicked action

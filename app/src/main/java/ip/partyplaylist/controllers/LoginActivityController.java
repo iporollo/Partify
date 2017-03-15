@@ -12,8 +12,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
+import ip.partyplaylist.model.Party;
 import ip.partyplaylist.screen_actions.LoginScreenActions;
 import ip.partyplaylist.util.SharedPreferenceHelper;
 import ip.partyplaylist.util.SpotifyScope;
@@ -21,13 +21,9 @@ import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.UserPrivate;
 import okhttp3.Call;
-import okhttp3.FormBody;
 import okhttp3.HttpUrl;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -43,12 +39,16 @@ public class LoginActivityController {
     private OkHttpClient client = new OkHttpClient();
 
     private final SharedPreferenceHelper mSharedPreferenceHelper;
+    private PartySavingLogicController mSavePartyContoller;
+    private Party mParty;
     private Context mContext;
 
 
-    public LoginActivityController(Context context) {
+    public LoginActivityController(Context context, Party createdParty) {
         mContext = context;
         mSharedPreferenceHelper = new SharedPreferenceHelper(context);
+        mSavePartyContoller = new PartySavingLogicController((LoginScreenActions) context);
+        mParty = createdParty;
     }
 
     public void onLoginUserToSpotify() {
@@ -156,7 +156,8 @@ public class LoginActivityController {
                     try {
                         JSONObject Jobject = new JSONObject(jsonData);
                         String token = Jobject.getString("token");
-                        onUserLoggedInSuccessfully(token);
+                        String expirationTime  = Jobject.getString("expires_in");
+                        onUserLoggedInSuccessfully(token, expirationTime);
                     }
                     catch (JSONException e) {
 
@@ -166,8 +167,10 @@ public class LoginActivityController {
         });
     }
 
-    public void onUserLoggedInSuccessfully(final String accessToken) {
+    public void onUserLoggedInSuccessfully(final String accessToken, final String expirationTime) {
         mSharedPreferenceHelper.saveSpotifyToken(accessToken);
+        mSharedPreferenceHelper.saveCurrentSpotifyTokenExpirationTime(expirationTime);
+        Log.i("Login controller", String.valueOf(expirationTime));
 
         SpotifyApi mSpotifyApi = new SpotifyApi();
         mSpotifyApi.setAccessToken(accessToken);
@@ -178,7 +181,9 @@ public class LoginActivityController {
             public void success(UserPrivate userPrivate, Response response) {
                 Log.d(TAG, "Obtained User Information.");
 
-                mSharedPreferenceHelper.saveCurrentUserId(userPrivate.id);
+                mSharedPreferenceHelper.saveCurrentSpotifyUserId(userPrivate.id);
+                mSavePartyContoller.saveParty(mParty);
+
             }
 
             @Override
